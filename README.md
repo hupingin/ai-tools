@@ -1,6 +1,12 @@
 # ai-tools
 
+[![CI](https://github.com/hupingin/ai-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/hupingin/ai-tools/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Zero dependency](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](https://github.com/hupingin/ai-tools/blob/main/package.json)
+
 **为 AI 重新造轮子：一套统一输入输出范式的命令行工具集。**
+
+> 仓库：<https://github.com/hupingin/ai-tools>
 
 软件五花八门，调用方式也五花八门。这个项目把「一个功能」收敛成一种 AI 能稳定生成、稳定解析、稳定组合的形态：
 

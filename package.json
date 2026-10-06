@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "为 AI 设计的统一范式命令行工具集：xxx_tool <function> -i input.desc -o output.desc",
   "license": "MIT",
+  "author": "hupingin",
+  "homepage": "https://github.com/hupingin/ai-tools#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hupingin/ai-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hupingin/ai-tools/issues"
+  },
   "keywords": [
     "ai",
     "llm",
@@ -38,6 +47,8 @@
     "registry.js",
     "SPEC.md",
     "README.md",
+    "INDEX.md",
+    "MANIFEST.json",
     "LICENSE"
   ],
   "scripts": {

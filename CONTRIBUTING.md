@@ -1,5 +1,7 @@
 # 贡献指南
 
+仓库：<https://github.com/hupingin/ai-tools>
+
 欢迎一起「重新造轮子」。这个仓库的目标很窄也很硬：**让 AI 能用一套统一范式调用所有功能**。所以新增代码的评审标准不是「功能多强」，而是「AI 能不能稳定地生成输入、解析输出」。
 
 ---
@@ -190,4 +192,6 @@ npm run smoke      # 端到端冒烟 14 项（进程内驱动 lib/cli.run）
 
 候选：音频/信号处理、地理/GIS、网络/HTTP、正则、压缩/归档、数据库、Markdown、HTTP 状态、机器学习指标、日志分析……
 
-欢迎开 issue 讨论——先定契约（`input.desc` 长什么样、`output.desc` 长什么样），再写代码。
+欢迎到 <https://github.com/hupingin/ai-tools/issues> 开 issue 讨论——先定契约（`input.desc` 长什么样、`output.desc` 长什么样），再写代码。
+
+Fork 后按上面的清单改，然后提 PR 到 `main` 分支；CI 会在 3 个操作系统 × Node 18/20/22 上跑完三套测试并校验索引未过期。
