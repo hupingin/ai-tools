@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>贡献指南 — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="index.html">总览</a>
+    <a href="spec.html">DESC/1.0 规范</a>
+    <a href="functions.html">全部函数</a>
+    <a href="contributing.html" class="on">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="index.html">总览</a>
+<a class="side-link" href="spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="functions.html">全部函数</a>
+<a class="side-link on" href="contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">贡献指南</a></h1>
+<p class="lead">新增函数或工具前请先读这一页——评审标准不是「功能多强」，而是「AI 能不能稳定地生成输入、解析输出」。</p>
+<div class="page-toc"><div class="t">目录</div>
+<a href="#三条底线" style="margin-left:0px">三条底线</a>
+<a href="#新增一个函数-最常见" style="margin-left:0px">新增一个函数（最常见）</a>
+<a href="#ctx-里有什么" style="margin-left:14px">ctx 里有什么</a>
+<a href="#desc-的三层读取视图" style="margin-left:14px">desc 的三层读取视图</a>
+<a href="#错误处理" style="margin-left:14px">错误处理</a>
+<a href="#输出" style="margin-left:14px">输出</a>
+<a href="#新增一个工具" style="margin-left:0px">新增一个工具</a>
+<a href="#硬约束" style="margin-left:14px">硬约束</a>
+<a href="#测试" style="margin-left:0px">测试</a>
+<a href="#提交前检查清单" style="margin-left:0px">提交前检查清单</a>
+<a href="#代码风格" style="margin-left:0px">代码风格</a>
+<a href="#想加的行业方向" style="margin-left:0px">想加的行业方向</a>
+</div>
+<h2 id="贡献指南" class="anchor"><a href="#贡献指南">贡献指南</a></h2>
+<p>仓库：&lt;https://github.com/hupingin/ai-tools&gt;</p>
+<p>欢迎一起「重新造轮子」。这个仓库的目标很窄也很硬：<strong>让 AI 能用一套统一范式调用所有功能</strong>。所以新增代码的评审标准不是「功能多强」，而是「AI 能不能稳定地生成输入、解析输出」。</p>
+<hr>
+<h3 id="三条底线" class="anchor"><a href="#三条底线">三条底线</a></h3>
+<ol><li><strong>零第三方依赖</strong>。只用 Node 内置模块（<code>node:fs</code>、<code>node:crypto</code>、<code>node:zlib</code>、<code>node:path</code>、<code>node:test</code> …）。</li></ol>
+<p>   <code>package.json</code> 的 <code>dependencies</code> 和 <code>devDependencies</code> 必须保持 <code>{}</code>。</p>
+<ol><li><strong>统一范式</strong>。调用永远是 <code>xxx_tool &lt;function&gt; -i input.desc -o output.desc</code>。</li><li><strong>示例即测试</strong>。每个函数的 <code>examples</code> 同时充当文档、AI 的 few-shot 样本和 <code>selftest</code> 的回归用例。</li></ol>
+<p>   没有 <code>examples</code> 的函数，等于没有契约。</p>
+<hr>
+<h3 id="新增一个函数-最常见" class="anchor"><a href="#新增一个函数-最常见">新增一个函数（最常见）</a></h3>
+<p>编辑 <code>tools/&lt;name&gt;_tool/index.js</code>，往 <code>functions</code> 数组里加一项：</p>
+<pre class="code" data-lang="js"><code>{
+  name: 'hypot',                    // 小写 + 下划线，不得占用保留名
+  group: '几何',                     // 用于 list 分组
+  summary: '直角三角形斜边长度',      // 一句话，AI 靠它选函数
+  args: [                            // 可选：额外命令行选项
+    { short: '-n', long: '--digits', type: 'number', default: 2, desc: '保留小数位' },
+  ],
+  input: {
+    kind: 'values',                  // values|text|json|csv|rows|kv|paths|png-or-path|none
+    layout: 'values',
+    count: 2,                        // 或 min: 1（至少一个）
+    desc: '两个直角边长度 a b',
+    example: '3 4',
+  },
+  output: {
+    layout: 'number',
+    desc: '斜边长度',
+    example: 5,
+  },
+  examples: [
+    { input: '3 4', expect: '5' },
+    { input: '5 12', expect: '13', opts: { digits: 2 } },
+  ],
+  run: (ctx) =&gt; {
+    const [a, b] = ctx.desc.numbers({ count: 2 });
+    return Math.hypot(a, b);
+  },
+}</code></pre>
+<p>然后：</p>
+<pre class="code" data-lang="bash"><code>npm run selftest     # 你的 examples 会被自动执行并校验
+npm run index        # 重新生成 INDEX.md 与 MANIFEST.json</code></pre>
+<h4 id="ctx-里有什么" class="anchor"><a href="#ctx-里有什么"><code>ctx</code> 里有什么</a></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody><tr><td><code>ctx.desc</code></td><td>DESC 读取器，见下</td></tr><tr><td><code>ctx.opts</code></td><td>解析后的选项（<code>--digits</code> → <code>ctx.opts.digits</code>）；已填默认值</td></tr><tr><td><code>ctx.positional</code></td><td>位置参数</td></tr><tr><td><code>ctx.buf</code></td><td>二进制输入（<code>input.binary: true</code> 时）</td></tr><tr><td><code>ctx.inPath</code></td><td>实际输入文件来源（stdin 时为 <code>'stdin'</code>）</td></tr><tr><td><code>ctx.sep</code></td><td><code>--sep</code> 指定的分隔符</td></tr><tr><td><code>ctx.tool</code> / <code>ctx.fn</code></td><td>工具与当前函数对象</td></tr></tbody></table></div>
+<h4 id="desc-的三层读取视图" class="anchor"><a href="#desc-的三层读取视图"><code>desc</code> 的三层读取视图</a></h4>
+<p>同一份裸数据，按需要取用：</p>
+<pre class="code" data-lang="js"><code>ctx.desc.payload()            // L0 原文       &quot;1 2&quot;
+ctx.desc.lines()              // L1 行         [&quot;1 2&quot;]
+ctx.desc.tokens()             // L2 字段       [&quot;1&quot;, &quot;2&quot;]
+ctx.desc.numbers({ count: 2 })// L2 数字       [1, 2]
+ctx.desc.strings()            // L2 字符串
+ctx.desc.kv()                 // L2 键值（每行 &quot;k v&quot;）
+ctx.desc.json()               // 整段 JSON
+ctx.desc.isEmpty()</code></pre>
+<blockquote><p><code>numbers({ count })</code> / <code>numbers({ min, max })</code> 会在数量不符时抛出 <strong>INPUT(2)</strong> 错误，不用自己校验。</p></blockquote>
+<h4 id="错误处理" class="anchor"><a href="#错误处理">错误处理</a></h4>
+<p>永远抛 <code>lib/errors.js</code> 的工厂函数，<strong>不要 <code>new</code></strong>：</p>
+<pre class="code" data-lang="js"><code>const { inputError, usageError, runtimeError, unknownError } = require('../../lib/errors');
+
+throw inputError('第 2 个值必须是正数', 'input.desc 形如: 3 4');
+throw usageError('--digits 不能为负');
+throw runtimeError('求解不收敛');</code></pre>
+<p>五个退出码：0 OK / 1 USAGE / 2 INPUT / 3 RUNTIME / 4 UNKNOWN。</p>
+<h4 id="输出" class="anchor"><a href="#输出">输出</a></h4>
+<p><code>run</code> 可以返回：</p>
+<ul><li>字符串 → 原样写入（自动补尾随 <code>\n</code>）</li><li>数字 → <code>String(n)</code></li><li>对象/数组 → <code>JSON.stringify(v, null, 2)</code></li><li><code>Buffer</code> → 二进制原样写入</li></ul>
+<p>浮点噪声请用 <code>lib/num.js</code> 的 <code>fmt()</code>：<code>0.1 + 0.2</code> → <code>&quot;0.3&quot;</code> 而不是 <code>&quot;0.30000000000000004&quot;</code>。</p>
+<hr>
+<h3 id="新增一个工具" class="anchor"><a href="#新增一个工具">新增一个工具</a></h3>
+<ol><li>建目录 <code>tools/&lt;name&gt;_tool/index.js</code>，导出：</li></ol>
+<pre class="code" data-lang="js"><code>   module.exports = {
+     name: '&lt;name&gt;_tool',
+     title: '中文标题',
+     category: '行业 / 领域',     // 如 '金融 / 财务'
+     summary: '一句话说明',
+     version: require('../../package.json').version,
+     functions,
+   };</code></pre>
+<ol><li>建 <code>bin/&lt;name&gt;_tool.js</code>（三行模板）：</li></ol>
+<pre class="code" data-lang="js"><code>   #!/usr/bin/env node
+   'use strict';
+   const { main } = require('../lib/cli');
+   main(require('../tools/&lt;name&gt;_tool'));</code></pre>
+<ol><li>在 <code>registry.js</code> 的 <code>TOOLS</code> 数组加一行。</li><li>在 <code>package.json</code> 的 <code>bin</code> 加一条。</li><li><code>npm run index</code> 重新生成索引。</li></ol>
+<h4 id="硬约束" class="anchor"><a href="#硬约束">硬约束</a></h4>
+<ul><li>工具名以 <code>_tool</code> 结尾。</li><li>函数名<strong>不得</strong>占用保留名：<code>list</code> / <code>functions</code> / <code>help</code> / <code>schema</code> / <code>selftest</code> / <code>version</code>。</li></ul>
+<p>  这些是元函数，优先级高于同名业务函数（<code>file_tool</code> 的列目录因此叫 <code>ls</code> 而不是 <code>list</code>）。</p>
+<ul><li>每个函数都要有 <code>summary</code>、<code>group</code>、<code>input</code>、<code>output</code>、<code>run</code>。</li><li><code>input.kind: 'none'</code> 表示不需要 <code>input.desc</code>（如 <code>crypto_tool uuid</code>）。</li></ul>
+<hr>
+<h3 id="测试" class="anchor"><a href="#测试">测试</a></h3>
+<pre class="code" data-lang="bash"><code>npm test           # node --test：DESC 解析、CLI 引擎、PNG 编解码、跨工具契约、算法正确性
+npm run selftest   # 跑全部工具的内置示例
+npm run smoke      # 端到端冒烟 14 项（进程内驱动 lib/cli.run）
+npm run doc        # 重新生成 doc/ 说明书
+npm run doc:check  # 校验 doc/ 无死链、无 undefined 残留</code></pre>
+<p><code>doc/</code> 下的 HTML 说明书是<strong>生成物</strong>，改了任何工具都必须重跑 <code>npm run doc</code>——CI 会用 <code>git diff --exit-code -- doc/</code> 挡住忘记生成的情况。</p>
+<ul><li>给 <code>lib/</code> 下的新模块写单元测试，放 <code>test/&lt;module&gt;.test.js</code>。</li><li><code>test/contract.test.js</code> 会自动校验<strong>所有</strong>工具：<code>_tool</code> 后缀、名字唯一、不撞保留名、必填字段齐全、schema 可序列化、selftest 全绿。所以它会自动覆盖你新加的工具——别破坏它。</li><li>修改函数后如果 <code>selftest</code> 红了，先怀疑<strong>你写的期望值算错了</strong>，再怀疑算法。这个坑已经踩过很多次（cv、协方差、pmt、base64url 方向…）。</li></ul>
+<hr>
+<h3 id="提交前检查清单" class="anchor"><a href="#提交前检查清单">提交前检查清单</a></h3>
+<ul><li>[ ] <code>npm test</code> / <code>npm run selftest</code> / <code>npm run smoke</code> 全绿</li><li>[ ] <code>npm run index</code> 已执行，<code>INDEX.md</code> 与 <code>MANIFEST.json</code> 已同步更新</li><li>[ ] <code>npm run doc</code> 与 <code>npm run doc:check</code> 已执行，<code>doc/</code> 已同步更新</li><li>[ ] 新函数有 <code>examples</code>，且期望值是<strong>手算或权威工具验证过</strong>的</li><li>[ ] 没有引入第三方依赖</li><li>[ ] 没有新增文件包含 NUL 字节或多行字符串字面量（Windows 下 shell 编辑容易中招，可用 <code>grep -c $'\0' file</code> 自查）</li><li>[ ] 错误信息带 <code>hint</code>，告诉 AI 该怎么改</li></ul>
+<hr>
+<h3 id="代码风格" class="anchor"><a href="#代码风格">代码风格</a></h3>
+<ul><li><code>'use strict'</code>；CommonJS（<code>require</code> / <code>module.exports</code>）。</li><li>2 空格缩进，分号，单引号。</li><li>注释用中文，说明「为什么」而不是「是什么」。</li><li>面向 AI 的文本优先：输出稳定、可解析、不夹带 ANSI 颜色码。</li></ul>
+<hr>
+<h3 id="想加的行业方向" class="anchor"><a href="#想加的行业方向">想加的行业方向</a></h3>
+<p>已落地：数学、统计、文本、JSON、CSV、时间、文件、加密、单位、颜色、图像、金融。</p>
+<p>候选：音频/信号处理、地理/GIS、网络/HTTP、正则、压缩/归档、数据库、Markdown、HTTP 状态、机器学习指标、日志分析……</p>
+<p>欢迎到 &lt;https://github.com/hupingin/ai-tools/issues&gt; 开 issue 讨论——先定契约（<code>input.desc</code> 长什么样、<code>output.desc</code> 长什么样），再写代码。</p>
+<p>Fork 后按上面的清单改，然后提 PR 到 <code>main</code> 分支；CI 会在 3 个操作系统 × Node 18/20/22 上跑完三套测试并校验索引未过期。</p>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

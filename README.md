@@ -196,6 +196,7 @@ ai-tools/
 │   ├── gen-index.js         # 生成 INDEX.md + MANIFEST.json
 │   └── smoke.js             # 端到端冒烟（14 项）
 ├── test/                    # node:test 单元测试
+├── doc/                     # HTML 说明书（由 npm run doc 生成，16 个页面）
 ├── SPEC.md                  # DESC/1.0 规范
 ├── INDEX.md                 # 自动生成的人读索引
 └── MANIFEST.json            # 自动生成的机器契约
@@ -210,7 +211,11 @@ npm test           # node --test，35 个单元测试
 npm run selftest   # 跑全部工具的内置示例（276 个函数、数百条用例）
 npm run smoke      # 端到端冒烟，14 项
 npm run index      # 重新生成 INDEX.md 与 MANIFEST.json
+npm run doc        # 重新生成 doc/ 说明书（16 个 HTML 页面）
+npm run doc:check  # 校验说明书无死链、无占位符残留
 ```
+
+完整说明书在 [`doc/index.html`](./doc/index.html)——纯静态 HTML，无需构建，直接用浏览器打开即可。
 
 新增工具/函数请看 [CONTRIBUTING.md](./CONTRIBUTING.md) 与 [SPEC.md](./SPEC.md)。
 

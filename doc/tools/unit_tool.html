@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>unit_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link on" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">unit_tool</a></h1>
+<p class="lead">单位换算工具 — 长度、质量、温度、时间、面积、体积、速度、数据量、压强、能量、功率、角度的换算</p>
+<div class="chips">
+  <span class="chip">通用 / 度量</span>
+  <span class="chip"><b>6</b> 个函数</span>
+  <span class="chip">用法 <code>unit_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>unit_tool list            # 列出全部函数
+unit_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+unit_tool schema &lt;fn&gt;    # JSON 机器契约
+unit_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#convert">换算 · convert</a>
+<a href="#convert_batch">换算 · convert_batch</a>
+<a href="#categories">查询 · categories</a>
+<a href="#list_units">查询 · list_units</a>
+<a href="#to_base">查询 · to_base</a>
+<a href="#explain">查询 · explain</a>
+</div>
+<p class="count" data-count>共 6 个函数</p>
+<div data-group>
+<h2 id="g-%E6%8D%A2%E7%AE%97" class="anchor"><a href="#g-%E6%8D%A2%E7%AE%97">换算（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="convert" data-fn="unit_tool convert 换算 单位换算：输入 &quot;数值 原单位 目标单位&quot;，如 &quot;100 km m&quot;">
+  <div class="fn-head">
+    <span class="fn-name">convert</span>
+    <span class="fn-sum">单位换算：输入 &quot;数值 原单位 目标单位&quot;，如 &quot;100 km m&quot;</span>
+    <span class="tag">换算</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>unit_tool convert -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">100 km m</div>
+      <div class="hint">数值 + 原单位 + 目标单位；歧义单位可用 &quot;m@length&quot; 或 --category</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">100000</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-c, --category</code></td><td><code>VAL</code></td><td></td><td>限定类别，解决同名单位歧义</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">100 km m</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">100000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="convert_batch" data-fn="unit_tool convert_batch 换算 批量换算：第 1 行 &quot;原单位 目标单位&quot;，其余每行一个数值">
+  <div class="fn-head">
+    <span class="fn-name">convert_batch</span>
+    <span class="fn-sum">批量换算：第 1 行 &quot;原单位 目标单位&quot;，其余每行一个数值</span>
+    <span class="tag">换算</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>unit_tool convert_batch -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">km m
+1
+2</div>
+      <div class="hint">第 1 行为 &quot;原单位 目标单位&quot;，第 2 行起每行一个数值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1000
+2000</div>
+      <div class="hint">每行一个换算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">km m
+1
+2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1000
+2000</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%9F%A5%E8%AF%A2" class="anchor"><a href="#g-%E6%9F%A5%E8%AF%A2">查询（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="categories" data-fn="unit_tool categories 查询 列出全部单位类别">
+  <div class="fn-head">
+    <span class="fn-name">categories</span>
+    <span class="fn-sum">列出全部单位类别</span>
+    <span class="tag">查询</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>unit_tool categories -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：none</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">每行 &quot;类别名 中文名 基准单位&quot;</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="list_units" data-fn="unit_tool list_units 查询 列出单位，--category 限定类别">
+  <div class="fn-head">
+    <span class="fn-name">list_units</span>
+    <span class="fn-sum">列出单位，--category 限定类别</span>
+    <span class="tag">查询</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>unit_tool list_units -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：none</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">每行 &quot;类别 单位 换算因子&quot;</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-c, --category</code></td><td><code>VAL</code></td><td></td><td>类别名，缺省列出全部</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="to_base" data-fn="unit_tool to_base 查询 换算为该类别的基准单位">
+  <div class="fn-head">
+    <span class="fn-name">to_base</span>
+    <span class="fn-sum">换算为该类别的基准单位</span>
+    <span class="tag">查询</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>unit_tool to_base -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">5 km</div>
+      <div class="hint">数值 + 单位</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">5000</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-c, --category</code></td><td><code>VAL</code></td><td></td><td>限定类别</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">5 km</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">5000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="explain" data-fn="unit_tool explain 查询 说明一次换算的因子与类别，便于核对">
+  <div class="fn-head">
+    <span class="fn-name">explain</span>
+    <span class="fn-sum">说明一次换算的因子与类别，便于核对</span>
+    <span class="tag">查询</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>unit_tool explain -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">km m</div>
+      <div class="hint">原单位 目标单位</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">category length
+from km
+to m
+factor 1000</div>
+      <div class="hint">布局：kv</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">km m</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">category length
+from km
+to m
+factor 1000</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="crypto_tool.html">crypto_tool</a></span>
+<span><a href="color_tool.html">color_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

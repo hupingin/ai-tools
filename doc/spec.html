@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DESC/1.0 规范 — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="index.html">总览</a>
+    <a href="spec.html" class="on">DESC/1.0 规范</a>
+    <a href="functions.html">全部函数</a>
+    <a href="contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="index.html">总览</a>
+<a class="side-link on" href="spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="functions.html">全部函数</a>
+<a class="side-link" href="contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">DESC/1.0 规范</a></h1>
+<p class="lead">DESC/1.0 是 ai-tools 的输入输出范式：一个 <code>.desc</code> 文件就是一段裸数据，怎么解释由 <code>tool + function</code> 的契约决定。</p>
+<div class="page-toc"><div class="t">目录</div>
+<a href="#1-调用范式" style="margin-left:0px">1. 调用范式</a>
+<a href="#2-desc-1-0-极简裸数据格式" style="margin-left:0px">2. DESC/1.0 —— 极简裸数据格式</a>
+<a href="#2-1-通用规则" style="margin-left:14px">2.1 通用规则</a>
+<a href="#2-2-三层读取视图" style="margin-left:14px">2.2 三层读取视图</a>
+<a href="#2-3-常见输入布局" style="margin-left:14px">2.3 常见输入布局</a>
+<a href="#3-退出码" style="margin-left:0px">3. 退出码</a>
+<a href="#4-元函数-每个工具都有" style="margin-left:0px">4. 元函数（每个工具都有）</a>
+<a href="#5-给-ai-的标准调用流程" style="margin-left:0px">5. 给 AI 的标准调用流程</a>
+<a href="#6-新增一个工具的约束" style="margin-left:0px">6. 新增一个工具的约束</a>
+</div>
+<h2 id="ai-tools-规范-v0-1-desc-1-0" class="anchor"><a href="#ai-tools-规范-v0-1-desc-1-0">AI Tools 规范 v0.1（DESC/1.0）</a></h2>
+<p>本仓库是一组<strong>面向 AI 的命令行工具</strong>，目标是把「软件功能」统一成一种 AI 能稳定生成、稳定解析、稳定组合的调用范式。</p>
+<p>设计信条只有三条：</p>
+<ol><li><strong>调用方式唯一</strong>——所有工具都是 <code>xxx_tool &lt;function&gt; -i input.desc -o output.desc</code>。</li><li><strong>输入输出唯一</strong>——所有数据都走 <code>.desc</code> 文件，内容是<strong>极简裸数据</strong>，不含信封、不含 key。</li><li><strong>契约可自发现</strong>——任何工具都能用 <code>list</code> / <code>help</code> / <code>schema</code> 把「该往 input.desc 写什么、output.desc 会是什么」告诉调用方。</li></ol>
+<hr>
+<h3 id="1-调用范式" class="anchor"><a href="#1-调用范式">1. 调用范式</a></h3>
+<pre class="code"><code>xxx_tool &lt;function&gt; [-i input.desc] [-o output.desc] [选项]</code></pre>
+<ul><li>工具名统一以 <code>_tool</code> 结尾，按行业分门别类：<code>basic_math_tool</code>、<code>finance_tool</code>、<code>image_tool</code> …</li><li><code>&lt;function&gt;</code> 是工具内的一个具体功能（小写 + 下划线）。</li><li><code>-i / --input</code>：输入文件，<strong>默认 <code>input.desc</code></strong>；<code>-</code> 表示读 stdin。</li><li><code>-o / --output</code>：输出文件，<strong>默认 <code>output.desc</code></strong>；<code>-</code> 表示写 stdout。</li><li>选项既可以是 <code>--long value</code>、<code>--long=value</code>，也可以是 <code>-s value</code>；布尔开关直接写 <code>--flag</code>。</li></ul>
+<p>最小示例（就是本项目的第一个例子）：</p>
+<pre class="code" data-lang="bash"><code>printf '1 2' &gt; input.desc
+basic_math_tool add -i input.desc -o output.desc
+cat output.desc   # =&gt; 3</code></pre>
+<p>因为 <code>-i/-o</code> 有默认值，上面三行也可以压成一行：</p>
+<pre class="code" data-lang="bash"><code>printf '1 2' &gt; input.desc &amp;&amp; basic_math_tool add &amp;&amp; cat output.desc</code></pre>
+<hr>
+<h3 id="2-desc-1-0-极简裸数据格式" class="anchor"><a href="#2-desc-1-0-极简裸数据格式">2. DESC/1.0 —— 极简裸数据格式</a></h3>
+<p><code>.desc</code> 文件就是<strong>一段裸数据</strong>，没有 JSON 信封、没有 <code>key: value</code>、没有类型标记。</p>
+<p><strong>具体怎么解释这段裸数据，由 <code>tool + function</code> 的契约决定。</strong></p>
+<p>这是本规范最核心的取舍：牺牲自描述性，换取 AI 生成输入和解析输出时的最小 token 消耗与最低出错率。自描述能力改由 <strong>schema 元函数</strong>提供（见第 4 节）。</p>
+<h4 id="2-1-通用规则" class="anchor"><a href="#2-1-通用规则">2.1 通用规则</a></h4>
+<div class="table-wrap"><table><thead><tr><th>规则</th><th>说明</th></tr></thead><tbody><tr><td>编码</td><td>UTF-8</td></tr><tr><td>换行</td><td>写入统一 <code>\n</code>；读取时兼容 <code>\r\n</code> 与 <code>\r</code></td></tr><tr><td>注释</td><td><strong>默认不解析</strong>。仅当函数契约声明 <code>comments</code> 时才忽略 <code>#</code> 开头的行，或用 <code>--comments</code> 显式开启。这样 <code>text_tool</code> 处理含 <code>#</code> 的 Markdown 时才不会丢字节</td></tr><tr><td>空行</td><td>行视图默认忽略；原文视图保留</td></tr><tr><td>输出</td><td>函数返回什么就写什么；文本文件保证以 <code>\n</code> 结尾；写入采用「临时文件 + rename」的原子方式</td></tr></tbody></table></div>
+<h4 id="2-2-三层读取视图" class="anchor"><a href="#2-2-三层读取视图">2.2 三层读取视图</a></h4>
+<p>读取器把同一份裸数据暴露成三层，函数按需取用：</p>
+<div class="table-wrap"><table><thead><tr><th>层</th><th>API</th><th>&quot;1 2&quot; 的结果</th></tr></thead><tbody><tr><td>L0 原文</td><td><code>desc.payload()</code></td><td><code>&quot;1 2&quot;</code></td></tr><tr><td>L1 行</td><td><code>desc.lines()</code></td><td><code>[&quot;1 2&quot;]</code></td></tr><tr><td>L2 字段</td><td><code>desc.tokens()</code> / <code>desc.numbers()</code></td><td><code>[&quot;1&quot;,&quot;2&quot;]</code> / <code>[1, 2]</code></td></tr></tbody></table></div>
+<p>同一份数据用空格分隔还是换行分隔，<strong>结果完全等价</strong>：</p>
+<pre class="code"><code>1 2      等价于      1
+                     2</code></pre>
+<p>这条等价性让 AI 不必纠结排版，是「面向 AI」的关键设计。</p>
+<h4 id="2-3-常见输入布局" class="anchor"><a href="#2-3-常见输入布局">2.3 常见输入布局</a></h4>
+<div class="table-wrap"><table><thead><tr><th>布局</th><th>说明</th><th>例子</th></tr></thead><tbody><tr><td><code>values</code></td><td>一串空白/换行分隔的值</td><td><code>basic_math_tool sum</code> ← <code>1 2 3 4</code></td></tr><tr><td><code>text</code></td><td>整段文本即负载</td><td><code>text_tool upper</code> ← <code>hello</code></td></tr><tr><td><code>json</code></td><td>一段完整 JSON</td><td><code>json_tool get</code> ← <code>{&quot;a&quot;:{&quot;b&quot;:42}}</code></td></tr><tr><td><code>csv</code></td><td>第 1 行为表头的表格文本</td><td><code>csv_tool select</code></td></tr><tr><td><code>rows</code></td><td>每行一条记录</td><td><code>file_tool ls</code></td></tr><tr><td><code>kv</code></td><td>每行 <code>键 值</code>（仅统计类输出用）</td><td><code>image_tool info</code></td></tr><tr><td><code>paths</code></td><td>每行一个路径</td><td><code>file_tool delete</code></td></tr><tr><td><code>png-or-path</code></td><td>PNG 二进制，或第 1 行为图片路径</td><td><code>image_tool resize</code></td></tr><tr><td><code>none</code></td><td>不需要 input.desc</td><td><code>crypto_tool uuid</code></td></tr></tbody></table></div>
+<hr>
+<h3 id="3-退出码" class="anchor"><a href="#3-退出码">3. 退出码</a></h3>
+<p>所有工具共用同一张表，AI 只需记住 5 个数字：</p>
+<div class="table-wrap"><table><thead><tr><th>码</th><th>名称</th><th>含义</th><th>AI 该如何反应</th></tr></thead><tbody><tr><td>0</td><td>OK</td><td>成功</td><td>读 <code>output.desc</code></td></tr><tr><td>1</td><td>USAGE</td><td>用法错误（未知选项、缺必填项）</td><td>用 <code>help &lt;function&gt;</code> 修正命令</td></tr><tr><td>2</td><td>INPUT</td><td>输入错误（文件缺失、内容无法解析、数量不符）</td><td>重写 <code>input.desc</code></td></tr><tr><td>3</td><td>RUNTIME</td><td>运行时错误（算法失败、IO 失败）</td><td>换参数或换工具</td></tr><tr><td>4</td><td>UNKNOWN</td><td>未知函数</td><td>用 <code>list</code> 查正确函数名</td></tr></tbody></table></div>
+<p>错误详情写到 <strong>stderr</strong>，格式为 <code>CODE(数字): 消息</code>，必要时附带 <code>hint: 建议</code>。</p>
+<blockquote><p><strong>重要</strong>：退出码非 0 时，<code>output.desc</code> <strong>不会被更新</strong>（可能是上一次的残留）。AI 必须先看退出码，再决定是否读文件。</p></blockquote>
+<hr>
+<h3 id="4-元函数-每个工具都有" class="anchor"><a href="#4-元函数-每个工具都有">4. 元函数（每个工具都有）</a></h3>
+<div class="table-wrap"><table><thead><tr><th>函数</th><th>作用</th><th>建议用法</th></tr></thead><tbody><tr><td><code>list</code></td><td>列出全部函数</td><td>第一次接触某工具时先跑它</td></tr><tr><td><code>help &lt;fn&gt;</code></td><td>打印某函数的输入输出契约与示例</td><td>调用前确认格式</td></tr><tr><td><code>schema [fn]</code></td><td>输出 <strong>JSON</strong> 机器契约</td><td>交给 Agent 自动消费</td></tr><tr><td><code>selftest</code></td><td>跑内置示例并校验输出</td><td>环境验证 / 回归</td></tr><tr><td><code>version</code></td><td>版本号</td><td>—</td></tr></tbody></table></div>
+<p>元函数名是<strong>保留字</strong>，优先级高于同名业务函数，保证任何情况下都能自发现。<br>（因此 <code>file_tool</code> 的列目录函数叫 <code>ls</code> 而不是 <code>list</code>。）</p>
+<p><code>schema</code> 的输出长这样（节选）：</p>
+<pre class="code" data-lang="json"><code>{
+  &quot;spec&quot;: &quot;DESC/1.0&quot;,
+  &quot;tool&quot;: &quot;basic_math_tool&quot;,
+  &quot;usage&quot;: &quot;basic_math_tool &lt;function&gt; -i input.desc -o output.desc [options]&quot;,
+  &quot;exitCodes&quot;: { &quot;OK&quot;: 0, &quot;USAGE&quot;: 1, &quot;INPUT&quot;: 2, &quot;RUNTIME&quot;: 3, &quot;UNKNOWN&quot;: 4 },
+  &quot;functions&quot;: [
+    {
+      &quot;name&quot;: &quot;add&quot;,
+      &quot;group&quot;: &quot;算术&quot;,
+      &quot;summary&quot;: &quot;两数相加&quot;,
+      &quot;input&quot;:  { &quot;kind&quot;: &quot;values&quot;, &quot;count&quot;: 2, &quot;example&quot;: &quot;1 2&quot; },
+      &quot;output&quot;: { &quot;layout&quot;: &quot;number&quot;, &quot;desc&quot;: &quot;计算结果&quot;, &quot;example&quot;: 3 },
+      &quot;examples&quot;: [ { &quot;input&quot;: &quot;1 2&quot;, &quot;expect&quot;: &quot;3&quot; } ]
+    }
+  ]
+}</code></pre>
+<hr>
+<h3 id="5-给-ai-的标准调用流程" class="anchor"><a href="#5-给-ai-的标准调用流程">5. 给 AI 的标准调用流程</a></h3>
+<pre class="code"><code>1. ai-tools index                      # 找到需要的工具
+2. xxx_tool list                       # 找到需要的函数
+3. xxx_tool help &lt;function&gt;            # 读 input/output 契约
+4. 写 input.desc（裸数据）
+5. xxx_tool &lt;function&gt; -i input.desc -o output.desc
+6. 检查退出码；为 0 再读 output.desc</code></pre>
+<hr>
+<h3 id="6-新增一个工具的约束" class="anchor"><a href="#6-新增一个工具的约束">6. 新增一个工具的约束</a></h3>
+<ol><li>目录 <code>tools/&lt;name&gt;_tool/index.js</code>，导出 <code>{ name, title, category, summary, version, functions }</code>。</li><li>工具名以 <code>_tool</code> 结尾；函数名用小写 + 下划线。</li><li>每个函数必须有 <code>summary</code>、<code>group</code>、<code>input</code>、<code>output</code>、<code>run</code>；<code>group</code> 用于 <code>list</code> 分组展示。</li><li>尽量提供 <code>examples</code>——它们既是文档，也是 <code>selftest</code> 的用例，还是 AI 的 few-shot 样本。</li><li>函数名不得占用元函数保留名（<code>list</code> / <code>help</code> / <code>schema</code> / <code>selftest</code> / <code>version</code> / <code>functions</code>）。</li><li>在 <code>registry.js</code> 与 <code>package.json#bin</code> 各加一行，并补 <code>bin/&lt;name&gt;_tool.js</code>。</li><li>保持<strong>零第三方依赖</strong>，只用 Node 内置模块。</li></ol>
+<p>详见 <a href="contributing.html">CONTRIBUTING.md</a>。</p>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

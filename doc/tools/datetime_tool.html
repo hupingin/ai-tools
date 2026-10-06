@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>datetime_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link on" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">datetime_tool</a></h1>
+<p class="lead">日期时间工具 — ISO8601 解析与格式化、时间加减、差值、工作日、时间戳、周期边界</p>
+<div class="chips">
+  <span class="chip">通用 / 时间</span>
+  <span class="chip"><b>20</b> 个函数</span>
+  <span class="chip">用法 <code>datetime_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>datetime_tool list            # 列出全部函数
+datetime_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+datetime_tool schema &lt;fn&gt;    # JSON 机器契约
+datetime_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#now">当前时间 · now</a>
+<a href="#today">当前时间 · today</a>
+<a href="#format">格式化 · format</a>
+<a href="#to_iso">格式化 · to_iso</a>
+<a href="#add">运算 · add</a>
+<a href="#diff">运算 · diff</a>
+<a href="#business_days">运算 · business_days</a>
+<a href="#add_business_days">运算 · add_business_days</a>
+<a href="#weekday">属性 · weekday</a>
+<a href="#quarter">属性 · quarter</a>
+<a href="#week_of_year">属性 · week_of_year</a>
+<a href="#day_of_year">属性 · day_of_year</a>
+<a href="#is_leap">属性 · is_leap</a>
+<a href="#days_in_month">属性 · days_in_month</a>
+<a href="#age">属性 · age</a>
+<a href="#timestamp">时间戳 · timestamp</a>
+<a href="#from_timestamp">时间戳 · from_timestamp</a>
+<a href="#start_of">边界 · start_of</a>
+<a href="#end_of">边界 · end_of</a>
+<a href="#convert_tz">边界 · convert_tz</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 datetime_tool 的 20 个函数中搜索…">
+<p class="count" data-count>共 20 个函数</p>
+<div data-group>
+<h2 id="g-%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4" class="anchor"><a href="#g-%E5%BD%93%E5%89%8D%E6%97%B6%E9%97%B4">当前时间（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="now" data-fn="datetime_tool now 当前时间 输出当前时间，--offset 指定时区，--format 指定格式">
+  <div class="fn-head">
+    <span class="fn-name">now</span>
+    <span class="fn-sum">输出当前时间，--offset 指定时区，--format 指定格式</span>
+    <span class="tag">当前时间</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool now -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">不读取输入文件</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">当前时间字符串</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr><tr><td><code>-f, --format</code></td><td><code>VAL</code></td><td><code>%Y-%m-%d %H:%M:%S</code></td><td>输出格式，strftime 风格</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="today" data-fn="datetime_tool today 当前时间 输出今天日期 %Y-%m-%d">
+  <div class="fn-head">
+    <span class="fn-name">today</span>
+    <span class="fn-sum">输出今天日期 %Y-%m-%d</span>
+    <span class="tag">当前时间</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool today -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：none</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%A0%BC%E5%BC%8F%E5%8C%96" class="anchor"><a href="#g-%E6%A0%BC%E5%BC%8F%E5%8C%96">格式化（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="format" data-fn="datetime_tool format 格式化 按 --format 格式化输入时间">
+  <div class="fn-head">
+    <span class="fn-name">format</span>
+    <span class="fn-sum">按 --format 格式化输入时间</span>
+    <span class="tag">格式化</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool format -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-02T03:04:05Z</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026/01/02 03:04</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr><tr><td><code>-f, --format</code></td><td><code>VAL</code></td><td><code>%Y-%m-%d %H:%M:%S</code></td><td>输出格式，strftime 风格</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-02T03:04:05Z</span><span class="k">  --format %Y/%m/%d %H:%M</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026/01/02 03:04</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="to_iso" data-fn="datetime_tool to_iso 格式化 归一化为 ISO8601（带时区偏移）">
+  <div class="fn-head">
+    <span class="fn-name">to_iso</span>
+    <span class="fn-sum">归一化为 ISO8601（带时区偏移）</span>
+    <span class="tag">格式化</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool to_iso -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026/01/02 03:04</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026-01-02T03:04:00+00:00</div>
+      <div class="hint">ISO8601 字符串</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026/01/02 03:04</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026-01-02T03:04:00+00:00</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%BF%90%E7%AE%97" class="anchor"><a href="#g-%E8%BF%90%E7%AE%97">运算（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="add" data-fn="datetime_tool add 运算 时间加减：输入 &quot;时间 数量 单位&quot;，如 &quot;2026-01-01 3 day&quot;">
+  <div class="fn-head">
+    <span class="fn-name">add</span>
+    <span class="fn-sum">时间加减：输入 &quot;时间 数量 单位&quot;，如 &quot;2026-01-01 3 day&quot;</span>
+    <span class="tag">运算</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool add -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01 3 day</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026-01-04 00:00:00</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr><tr><td><code>-f, --format</code></td><td><code>VAL</code></td><td><code>%Y-%m-%d %H:%M:%S</code></td><td>输出格式，strftime 风格</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01 3 day</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026-01-04 00:00:00</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="diff" data-fn="datetime_tool diff 运算 两个时间之差（后减前），--unit 指定单位">
+  <div class="fn-head">
+    <span class="fn-name">diff</span>
+    <span class="fn-sum">两个时间之差（后减前），--unit 指定单位</span>
+    <span class="tag">运算</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool diff -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01
+2026-01-11</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">10</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--unit</code></td><td><code>VAL</code></td><td><code>day</code></td><td>second|minute|hour|day|week</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01
+2026-01-11</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">10</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="business_days" data-fn="datetime_tool business_days 运算 两个日期之间的工作日天数（含首、含尾，跳过周末）">
+  <div class="fn-head">
+    <span class="fn-name">business_days</span>
+    <span class="fn-sum">两个日期之间的工作日天数（含首、含尾，跳过周末）</span>
+    <span class="tag">运算</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool business_days -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01
+2026-01-11</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">7</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01
+2026-01-11</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">7</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="add_business_days" data-fn="datetime_tool add_business_days 运算 从起始日期起算 N 个工作日后的日期（跳过周末）">
+  <div class="fn-head">
+    <span class="fn-name">add_business_days</span>
+    <span class="fn-sum">从起始日期起算 N 个工作日后的日期（跳过周末）</span>
+    <span class="tag">运算</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool add_business_days -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01 5</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026-01-08 00:00:00</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026-01-08 00:00:00</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%B1%9E%E6%80%A7" class="anchor"><a href="#g-%E5%B1%9E%E6%80%A7">属性（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="weekday" data-fn="datetime_tool weekday 属性 星期几，输出 &quot;ISO序号 英文名&quot;（1=周一）">
+  <div class="fn-head">
+    <span class="fn-name">weekday</span>
+    <span class="fn-sum">星期几，输出 &quot;ISO序号 英文名&quot;（1=周一）</span>
+    <span class="tag">属性</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool weekday -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">4 Thursday</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">4 Thursday</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="quarter" data-fn="datetime_tool quarter 属性 所属季度 1~4">
+  <div class="fn-head">
+    <span class="fn-name">quarter</span>
+    <span class="fn-sum">所属季度 1~4</span>
+    <span class="tag">属性</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool quarter -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-05-01</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-05-01</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="week_of_year" data-fn="datetime_tool week_of_year 属性 ISO 周序号">
+  <div class="fn-head">
+    <span class="fn-name">week_of_year</span>
+    <span class="fn-sum">ISO 周序号</span>
+    <span class="tag">属性</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool week_of_year -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="day_of_year" data-fn="datetime_tool day_of_year 属性 一年中的第几天">
+  <div class="fn-head">
+    <span class="fn-name">day_of_year</span>
+    <span class="fn-sum">一年中的第几天</span>
+    <span class="tag">属性</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool day_of_year -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="is_leap" data-fn="datetime_tool is_leap 属性 是否闰年，输出 true/false">
+  <div class="fn-head">
+    <span class="fn-name">is_leap</span>
+    <span class="fn-sum">是否闰年，输出 true/false</span>
+    <span class="tag">属性</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool is_leap -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2024</div>
+      <div class="hint">年份</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">布局：boolean</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2024</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="days_in_month" data-fn="datetime_tool days_in_month 属性 该月天数">
+  <div class="fn-head">
+    <span class="fn-name">days_in_month</span>
+    <span class="fn-sum">该月天数</span>
+    <span class="tag">属性</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool days_in_month -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2024-02</div>
+      <div class="hint">YYYY-MM 或 YYYY M</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">29</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2024-02</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">29</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="age" data-fn="datetime_tool age 属性 距指定日期的周岁年数（第二行为&quot;截至日期&quot;，可省略）">
+  <div class="fn-head">
+    <span class="fn-name">age</span>
+    <span class="fn-sum">距指定日期的周岁年数（第二行为&quot;截至日期&quot;，可省略）</span>
+    <span class="tag">属性</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool age -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2000-01-01
+2026-01-01</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">26</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2000-01-01
+2026-01-01</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">26</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%97%B6%E9%97%B4%E6%88%B3" class="anchor"><a href="#g-%E6%97%B6%E9%97%B4%E6%88%B3">时间戳（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="timestamp" data-fn="datetime_tool timestamp 时间戳 转 Unix 时间戳，--ms 输出毫秒">
+  <div class="fn-head">
+    <span class="fn-name">timestamp</span>
+    <span class="fn-sum">转 Unix 时间戳，--ms 输出毫秒</span>
+    <span class="tag">时间戳</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool timestamp -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1970-01-01T00:00:00Z</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--ms</code></td><td></td><td></td><td>输出毫秒</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1970-01-01T00:00:00Z</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="from_timestamp" data-fn="datetime_tool from_timestamp 时间戳 Unix 时间戳转 ISO，自动识别秒/毫秒">
+  <div class="fn-head">
+    <span class="fn-name">from_timestamp</span>
+    <span class="fn-sum">Unix 时间戳转 ISO，自动识别秒/毫秒</span>
+    <span class="tag">时间戳</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool from_timestamp -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0</div>
+      <div class="hint">Unix 时间戳（秒或毫秒）</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1970-01-01 00:00:00</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr><tr><td><code>-f, --format</code></td><td><code>VAL</code></td><td><code>%Y-%m-%d %H:%M:%S</code></td><td>输出格式，strftime 风格</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1970-01-01 00:00:00</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%BE%B9%E7%95%8C" class="anchor"><a href="#g-%E8%BE%B9%E7%95%8C">边界（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="start_of" data-fn="datetime_tool start_of 边界 取所处周期的起点，--unit day|week|month|year">
+  <div class="fn-head">
+    <span class="fn-name">start_of</span>
+    <span class="fn-sum">取所处周期的起点，--unit day|week|month|year</span>
+    <span class="tag">边界</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool start_of -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-05-17 10:20:30</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026-05-17 00:00:00</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr><tr><td><code>--unit</code></td><td><code>VAL</code></td><td><code>day</code></td><td>day|week|month|year</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-05-17 10:20:30</span><span class="k">  --unit day</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026-05-17 00:00:00</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="end_of" data-fn="datetime_tool end_of 边界 取所处周期的终点（含最后一秒），--unit day|week|month|year">
+  <div class="fn-head">
+    <span class="fn-name">end_of</span>
+    <span class="fn-sum">取所处周期的终点（含最后一秒），--unit day|week|month|year</span>
+    <span class="tag">边界</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool end_of -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-05-17 10:20:30</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026-05-17 23:59:59</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>显示时区偏移：分钟数(480)或 +08:00，默认沿用输入时区/UTC</td></tr><tr><td><code>--unit</code></td><td><code>VAL</code></td><td><code>day</code></td><td>day|week|month|year</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-05-17 10:20:30</span><span class="k">  --unit day</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026-05-17 23:59:59</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="convert_tz" data-fn="datetime_tool convert_tz 边界 把时间换算到 --offset 指定的时区显示">
+  <div class="fn-head">
+    <span class="fn-name">convert_tz</span>
+    <span class="fn-sum">把时间换算到 --offset 指定的时区显示</span>
+    <span class="tag">边界</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>datetime_tool convert_tz -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2026-01-01T00:00:00Z</div>
+      <div class="hint">日期时间字符串</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2026-01-01T08:00:00+08:00</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--offset</code></td><td><code>VAL</code></td><td></td><td>目标时区偏移：480 或 +08:00（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2026-01-01T00:00:00Z</span><span class="k">  --offset 480</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2026-01-01T08:00:00+08:00</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="csv_tool.html">csv_tool</a></span>
+<span><a href="file_tool.html">file_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

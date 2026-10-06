@@ -55,6 +55,8 @@
     "test": "node --test",
     "selftest": "node scripts/selftest-all.js",
     "index": "node scripts/gen-index.js",
+    "doc": "node scripts/gen-doc.js",
+    "doc:check": "node scripts/check-doc.js",
     "smoke": "node scripts/smoke.js"
   },
   "dependencies": {},

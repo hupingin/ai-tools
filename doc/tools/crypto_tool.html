@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crypto_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link on" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">crypto_tool</a></h1>
+<p class="lead">编码加密工具 — 哈希与 HMAC、Base64/Hex/URL 编解码、UUID 与随机数、AES 加解密、口令派生、古典密码</p>
+<div class="chips">
+  <span class="chip">安全 / 编码</span>
+  <span class="chip"><b>24</b> 个函数</span>
+  <span class="chip">用法 <code>crypto_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>crypto_tool list            # 列出全部函数
+crypto_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+crypto_tool schema &lt;fn&gt;    # JSON 机器契约
+crypto_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#md5">哈希 · md5</a>
+<a href="#sha1">哈希 · sha1</a>
+<a href="#sha256">哈希 · sha256</a>
+<a href="#sha512">哈希 · sha512</a>
+<a href="#crc32">哈希 · crc32</a>
+<a href="#hmac">哈希 · hmac</a>
+<a href="#base64_encode">编码 · base64_encode</a>
+<a href="#base64_decode">编码 · base64_decode</a>
+<a href="#base64url_encode">编码 · base64url_encode</a>
+<a href="#base64url_decode">编码 · base64url_decode</a>
+<a href="#hex_encode">编码 · hex_encode</a>
+<a href="#hex_decode">编码 · hex_decode</a>
+<a href="#url_encode">编码 · url_encode</a>
+<a href="#url_decode">编码 · url_decode</a>
+<a href="#uuid">随机 · uuid</a>
+<a href="#random_hex">随机 · random_hex</a>
+<a href="#random_string">随机 · random_string</a>
+<a href="#aes_encrypt">对称加密 · aes_encrypt</a>
+<a href="#aes_decrypt">对称加密 · aes_decrypt</a>
+<a href="#pbkdf2">口令派生 · pbkdf2</a>
+<a href="#scrypt">口令派生 · scrypt</a>
+<a href="#caesar">古典密码 · caesar</a>
+<a href="#rot13">古典密码 · rot13</a>
+<a href="#xor">古典密码 · xor</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 crypto_tool 的 24 个函数中搜索…">
+<p class="count" data-count>共 24 个函数</p>
+<div data-group>
+<h2 id="g-%E5%93%88%E5%B8%8C" class="anchor"><a href="#g-%E5%93%88%E5%B8%8C">哈希（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="md5" data-fn="crypto_tool md5 哈希 md5 摘要（十六进制）">
+  <div class="fn-head">
+    <span class="fn-name">md5</span>
+    <span class="fn-sum">md5 摘要（十六进制）</span>
+    <span class="tag">哈希</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool md5 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">900150983cd24fb0d6963f7d28e17f72</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">900150983cd24fb0d6963f7d28e17f72</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sha1" data-fn="crypto_tool sha1 哈希 sha1 摘要（十六进制）">
+  <div class="fn-head">
+    <span class="fn-name">sha1</span>
+    <span class="fn-sum">sha1 摘要（十六进制）</span>
+    <span class="tag">哈希</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool sha1 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a9993e364706816aba3e25717850c26c9cd0d89d</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a9993e364706816aba3e25717850c26c9cd0d89d</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sha256" data-fn="crypto_tool sha256 哈希 sha256 摘要（十六进制）">
+  <div class="fn-head">
+    <span class="fn-name">sha256</span>
+    <span class="fn-sum">sha256 摘要（十六进制）</span>
+    <span class="tag">哈希</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool sha256 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sha512" data-fn="crypto_tool sha512 哈希 sha512 摘要（十六进制）">
+  <div class="fn-head">
+    <span class="fn-name">sha512</span>
+    <span class="fn-sum">sha512 摘要（十六进制）</span>
+    <span class="tag">哈希</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool sha512 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="crc32" data-fn="crypto_tool crc32 哈希 CRC32 校验值（十六进制 8 位）">
+  <div class="fn-head">
+    <span class="fn-name">crc32</span>
+    <span class="fn-sum">CRC32 校验值（十六进制 8 位）</span>
+    <span class="tag">哈希</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool crc32 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">352441c2</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">352441c2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hmac" data-fn="crypto_tool hmac 哈希 HMAC 签名：--key 密钥，--algo 算法">
+  <div class="fn-head">
+    <span class="fn-name">hmac</span>
+    <span class="fn-sum">HMAC 签名：--key 密钥，--algo 算法</span>
+    <span class="tag">哈希</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool hmac -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">9946dad4e00e913fc8be8e5d3f7e110a4a9e832f83fb09c345285d78638d8a0e</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-k, --key</code></td><td><code>VAL</code></td><td></td><td>密钥（必填）</td></tr><tr><td><code>--algo</code></td><td><code>VAL</code></td><td><code>sha256</code></td><td>sha1|sha256|sha512</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span><span class="k">  --key secret --algo sha256</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">9946dad4e00e913fc8be8e5d3f7e110a4a9e832f83fb09c345285d78638d8a0e</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E7%BC%96%E7%A0%81" class="anchor"><a href="#g-%E7%BC%96%E7%A0%81">编码（8）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="base64_encode" data-fn="crypto_tool base64_encode 编码 Base64 编码">
+  <div class="fn-head">
+    <span class="fn-name">base64_encode</span>
+    <span class="fn-sum">Base64 编码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool base64_encode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">YWJj</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">YWJj</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="base64_decode" data-fn="crypto_tool base64_decode 编码 Base64 解码">
+  <div class="fn-head">
+    <span class="fn-name">base64_decode</span>
+    <span class="fn-sum">Base64 解码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool base64_decode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">YWJj</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">YWJj</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">abc</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="base64url_encode" data-fn="crypto_tool base64url_encode 编码 Base64URL 编码（URL 安全）">
+  <div class="fn-head">
+    <span class="fn-name">base64url_encode</span>
+    <span class="fn-sum">Base64URL 编码（URL 安全）</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool base64url_encode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">???&gt;&gt;&gt;</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">Pz8_Pj4-</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">???&gt;&gt;&gt;</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">Pz8_Pj4-</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="base64url_decode" data-fn="crypto_tool base64url_decode 编码 Base64URL 解码">
+  <div class="fn-head">
+    <span class="fn-name">base64url_decode</span>
+    <span class="fn-sum">Base64URL 解码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool base64url_decode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">Pz8_Pj4-</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">???&gt;&gt;&gt;</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">Pz8_Pj4-</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">???&gt;&gt;&gt;</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hex_encode" data-fn="crypto_tool hex_encode 编码 十六进制编码">
+  <div class="fn-head">
+    <span class="fn-name">hex_encode</span>
+    <span class="fn-sum">十六进制编码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool hex_encode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">616263</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">616263</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hex_decode" data-fn="crypto_tool hex_decode 编码 十六进制解码">
+  <div class="fn-head">
+    <span class="fn-name">hex_decode</span>
+    <span class="fn-sum">十六进制解码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool hex_decode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">616263</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">616263</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">abc</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="url_encode" data-fn="crypto_tool url_encode 编码 URL 百分号编码">
+  <div class="fn-head">
+    <span class="fn-name">url_encode</span>
+    <span class="fn-sum">URL 百分号编码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool url_encode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a b&amp;c</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a%20b%26c</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a b&amp;c</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a%20b%26c</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="url_decode" data-fn="crypto_tool url_decode 编码 URL 百分号解码">
+  <div class="fn-head">
+    <span class="fn-name">url_decode</span>
+    <span class="fn-sum">URL 百分号解码</span>
+    <span class="tag">编码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool url_decode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a%20b%26c</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a b&amp;c</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a%20b%26c</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a b&amp;c</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E9%9A%8F%E6%9C%BA" class="anchor"><a href="#g-%E9%9A%8F%E6%9C%BA">随机（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="uuid" data-fn="crypto_tool uuid 随机 生成 UUID v4（无需输入）">
+  <div class="fn-head">
+    <span class="fn-name">uuid</span>
+    <span class="fn-sum">生成 UUID v4（无需输入）</span>
+    <span class="tag">随机</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool uuid -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：none</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="random_hex" data-fn="crypto_tool random_hex 随机 生成随机十六进制串，--n 字节数">
+  <div class="fn-head">
+    <span class="fn-name">random_hex</span>
+    <span class="fn-sum">生成随机十六进制串，--n 字节数</span>
+    <span class="tag">随机</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool random_hex -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：none</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>16</code></td><td>随机字节数</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="random_string" data-fn="crypto_tool random_string 随机 生成随机字符串，--n 长度，--charset 字符集">
+  <div class="fn-head">
+    <span class="fn-name">random_string</span>
+    <span class="fn-sum">生成随机字符串，--n 长度，--charset 字符集</span>
+    <span class="tag">随机</span>
+    <span class="tag">无需输入</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool random_string -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">布局：none</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>12</code></td><td>长度</td></tr><tr><td><code>--charset</code></td><td><code>VAL</code></td><td><code>A-Za-z0-9</code></td><td>字符范围简写或字面字符集</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86" class="anchor"><a href="#g-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86">对称加密（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="aes_encrypt" data-fn="crypto_tool aes_encrypt 对称加密 AES 加密：--key 口令，--mode gcm|cbc，输出 Base64（含 IV）">
+  <div class="fn-head">
+    <span class="fn-name">aes_encrypt</span>
+    <span class="fn-sum">AES 加密：--key 口令，--mode gcm|cbc，输出 Base64（含 IV）</span>
+    <span class="tag">对称加密</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool aes_encrypt -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-k, --key</code></td><td><code>VAL</code></td><td></td><td>口令（必填）</td></tr><tr><td><code>--mode</code></td><td><code>VAL</code></td><td><code>gcm</code></td><td>gcm|cbc</td></tr><tr><td><code>--iv</code></td><td><code>VAL</code></td><td></td><td>十六进制 IV，缺省随机生成（GCM 12 字节 / CBC 16 字节）</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="aes_decrypt" data-fn="crypto_tool aes_decrypt 对称加密 AES 解密：--key 口令，--mode gcm|cbc">
+  <div class="fn-head">
+    <span class="fn-name">aes_decrypt</span>
+    <span class="fn-sum">AES 解密：--key 口令，--mode gcm|cbc</span>
+    <span class="tag">对称加密</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool aes_decrypt -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-k, --key</code></td><td><code>VAL</code></td><td></td><td>口令（必填）</td></tr><tr><td><code>--mode</code></td><td><code>VAL</code></td><td><code>gcm</code></td><td>gcm|cbc</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%8F%A3%E4%BB%A4%E6%B4%BE%E7%94%9F" class="anchor"><a href="#g-%E5%8F%A3%E4%BB%A4%E6%B4%BE%E7%94%9F">口令派生（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="pbkdf2" data-fn="crypto_tool pbkdf2 口令派生 PBKDF2 派生密钥，--salt --iterations --keylen --digest">
+  <div class="fn-head">
+    <span class="fn-name">pbkdf2</span>
+    <span class="fn-sum">PBKDF2 派生密钥，--salt --iterations --keylen --digest</span>
+    <span class="tag">口令派生</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool pbkdf2 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--salt</code></td><td><code>VAL</code></td><td><code>ai-tools</code></td><td>盐值</td></tr><tr><td><code>--iterations</code></td><td><code>VAL</code></td><td><code>100000</code></td><td>迭代次数</td></tr><tr><td><code>--keylen</code></td><td><code>VAL</code></td><td><code>32</code></td><td>密钥字节数</td></tr><tr><td><code>--digest</code></td><td><code>VAL</code></td><td><code>sha256</code></td><td>摘要算法</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="scrypt" data-fn="crypto_tool scrypt 口令派生 scrypt 派生密钥，--salt --keylen">
+  <div class="fn-head">
+    <span class="fn-name">scrypt</span>
+    <span class="fn-sum">scrypt 派生密钥，--salt --keylen</span>
+    <span class="tag">口令派生</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool scrypt -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--salt</code></td><td><code>VAL</code></td><td><code>ai-tools</code></td><td>盐值</td></tr><tr><td><code>--keylen</code></td><td><code>VAL</code></td><td><code>32</code></td><td>密钥字节数</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81" class="anchor"><a href="#g-%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81">古典密码（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="caesar" data-fn="crypto_tool caesar 古典密码 凯撒移位，--shift 位移量（可为负）">
+  <div class="fn-head">
+    <span class="fn-name">caesar</span>
+    <span class="fn-sum">凯撒移位，--shift 位移量（可为负）</span>
+    <span class="tag">古典密码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool caesar -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">nop</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-s, --shift</code></td><td><code>VAL</code></td><td><code>13</code></td><td>位移量，默认 13</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span><span class="k">  --shift 13</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">nop</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="rot13" data-fn="crypto_tool rot13 古典密码 ROT13（凯撒 13 位移）">
+  <div class="fn-head">
+    <span class="fn-name">rot13</span>
+    <span class="fn-sum">ROT13（凯撒 13 位移）</span>
+    <span class="tag">古典密码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool rot13 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">nop</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">nop</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="xor" data-fn="crypto_tool xor 古典密码 按 --key 循环异或，输出十六进制">
+  <div class="fn-head">
+    <span class="fn-name">xor</span>
+    <span class="fn-sum">按 --key 循环异或，输出十六进制</span>
+    <span class="tag">古典密码</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>crypto_tool xor -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">待处理的文本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">202322</div>
+      <div class="hint">结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-k, --key</code></td><td><code>VAL</code></td><td></td><td>异或密钥字符串（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span><span class="k">  --key A</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">202322</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="file_tool.html">file_tool</a></span>
+<span><a href="unit_tool.html">unit_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

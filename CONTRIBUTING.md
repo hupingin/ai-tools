@@ -158,7 +158,11 @@ throw runtimeError('求解不收敛');
 npm test           # node --test：DESC 解析、CLI 引擎、PNG 编解码、跨工具契约、算法正确性
 npm run selftest   # 跑全部工具的内置示例
 npm run smoke      # 端到端冒烟 14 项（进程内驱动 lib/cli.run）
+npm run doc        # 重新生成 doc/ 说明书
+npm run doc:check  # 校验 doc/ 无死链、无 undefined 残留
 ```
+
+`doc/` 下的 HTML 说明书是**生成物**，改了任何工具都必须重跑 `npm run doc`——CI 会用 `git diff --exit-code -- doc/` 挡住忘记生成的情况。
 
 - 给 `lib/` 下的新模块写单元测试，放 `test/<module>.test.js`。
 - `test/contract.test.js` 会自动校验**所有**工具：`_tool` 后缀、名字唯一、不撞保留名、必填字段齐全、schema 可序列化、selftest 全绿。所以它会自动覆盖你新加的工具——别破坏它。
@@ -170,6 +174,7 @@ npm run smoke      # 端到端冒烟 14 项（进程内驱动 lib/cli.run）
 
 - [ ] `npm test` / `npm run selftest` / `npm run smoke` 全绿
 - [ ] `npm run index` 已执行，`INDEX.md` 与 `MANIFEST.json` 已同步更新
+- [ ] `npm run doc` 与 `npm run doc:check` 已执行，`doc/` 已同步更新
 - [ ] 新函数有 `examples`，且期望值是**手算或权威工具验证过**的
 - [ ] 没有引入第三方依赖
 - [ ] 没有新增文件包含 NUL 字节或多行字符串字面量（Windows 下 shell 编辑容易中招，可用 `grep -c $'\0' file` 自查）

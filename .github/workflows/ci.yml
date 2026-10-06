@@ -41,6 +41,12 @@ jobs:
           npm run index
           git diff --exit-code -- INDEX.md MANIFEST.json
 
+      - name: 说明书是否最新且无死链
+        run: |
+          npm run doc
+          npm run doc:check
+          git diff --exit-code -- doc/
+
   contract:
     name: 契约与规范校验
     runs-on: ubuntu-latest

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>color_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link on" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">color_tool</a></h1>
+<p class="lead">颜色工具 — HEX/RGB/HSL/HSV/CMYK 互转、明暗与饱和度调整、混色渐变、WCAG 对比度</p>
+<div class="chips">
+  <span class="chip">设计 / 视觉</span>
+  <span class="chip"><b>22</b> 个函数</span>
+  <span class="chip">用法 <code>color_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>color_tool list            # 列出全部函数
+color_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+color_tool schema &lt;fn&gt;    # JSON 机器契约
+color_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#parse">转换 · parse</a>
+<a href="#hex_to_rgb">转换 · hex_to_rgb</a>
+<a href="#rgb_to_hex">转换 · rgb_to_hex</a>
+<a href="#hex_to_hsl">转换 · hex_to_hsl</a>
+<a href="#hsl_to_hex">转换 · hsl_to_hex</a>
+<a href="#hex_to_hsv">转换 · hex_to_hsv</a>
+<a href="#hsv_to_hex">转换 · hsv_to_hex</a>
+<a href="#hex_to_cmyk">转换 · hex_to_cmyk</a>
+<a href="#lighten">调整 · lighten</a>
+<a href="#darken">调整 · darken</a>
+<a href="#saturate">调整 · saturate</a>
+<a href="#desaturate">调整 · desaturate</a>
+<a href="#complement">调整 · complement</a>
+<a href="#invert">调整 · invert</a>
+<a href="#grayscale">调整 · grayscale</a>
+<a href="#mix">组合 · mix</a>
+<a href="#gradient">组合 · gradient</a>
+<a href="#luminance">度量 · luminance</a>
+<a href="#contrast_ratio">度量 · contrast_ratio</a>
+<a href="#is_light">度量 · is_light</a>
+<a href="#is_dark">度量 · is_dark</a>
+<a href="#distance">度量 · distance</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 color_tool 的 22 个函数中搜索…">
+<p class="count" data-count>共 22 个函数</p>
+<div data-group>
+<h2 id="g-%E8%BD%AC%E6%8D%A2" class="anchor"><a href="#g-%E8%BD%AC%E6%8D%A2">转换（8）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="parse" data-fn="color_tool parse 转换 把任意颜色写法归一化为 #rrggbb">
+  <div class="fn-head">
+    <span class="fn-name">parse</span>
+    <span class="fn-sum">把任意颜色写法归一化为 #rrggbb</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool parse -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#f00</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#f00</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#ff0000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hex_to_rgb" data-fn="color_tool hex_to_rgb 转换 十六进制转 RGB，输出 &quot;r g b&quot;">
+  <div class="fn-head">
+    <span class="fn-name">hex_to_rgb</span>
+    <span class="fn-sum">十六进制转 RGB，输出 &quot;r g b&quot;</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool hex_to_rgb -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">255 0 0</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">255 0 0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="rgb_to_hex" data-fn="color_tool rgb_to_hex 转换 RGB 转十六进制">
+  <div class="fn-head">
+    <span class="fn-name">rgb_to_hex</span>
+    <span class="fn-sum">RGB 转十六进制</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool rgb_to_hex -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">255 0 0</div>
+      <div class="hint">三个数字 r g b</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">255 0 0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#ff0000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hex_to_hsl" data-fn="color_tool hex_to_hsl 转换 转 HSL，输出 &quot;h s% l%&quot;">
+  <div class="fn-head">
+    <span class="fn-name">hex_to_hsl</span>
+    <span class="fn-sum">转 HSL，输出 &quot;h s% l%&quot;</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool hex_to_hsl -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0 100 50</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0 100 50</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hsl_to_hex" data-fn="color_tool hsl_to_hex 转换 HSL 转十六进制">
+  <div class="fn-head">
+    <span class="fn-name">hsl_to_hex</span>
+    <span class="fn-sum">HSL 转十六进制</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool hsl_to_hex -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0 100 50</div>
+      <div class="hint">三个数字：色相 0~360、饱和度%、亮度%</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0 100 50</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#ff0000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hex_to_hsv" data-fn="color_tool hex_to_hsv 转换 转 HSV，输出 &quot;h s% v%&quot;">
+  <div class="fn-head">
+    <span class="fn-name">hex_to_hsv</span>
+    <span class="fn-sum">转 HSV，输出 &quot;h s% v%&quot;</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool hex_to_hsv -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0 100 100</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0 100 100</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hsv_to_hex" data-fn="color_tool hsv_to_hex 转换 HSV 转十六进制">
+  <div class="fn-head">
+    <span class="fn-name">hsv_to_hex</span>
+    <span class="fn-sum">HSV 转十六进制</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool hsv_to_hex -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0 100 100</div>
+      <div class="hint">三个数字：色相 0~360、饱和度%、明度%</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0 100 100</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#ff0000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hex_to_cmyk" data-fn="color_tool hex_to_cmyk 转换 转 CMYK，输出 &quot;c% m% y% k%&quot;">
+  <div class="fn-head">
+    <span class="fn-name">hex_to_cmyk</span>
+    <span class="fn-sum">转 CMYK，输出 &quot;c% m% y% k%&quot;</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool hex_to_cmyk -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0 100 100 0</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0 100 100 0</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%B0%83%E6%95%B4" class="anchor"><a href="#g-%E8%B0%83%E6%95%B4">调整（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="lighten" data-fn="color_tool lighten 调整 提高亮度，--amount 百分点">
+  <div class="fn-head">
+    <span class="fn-name">lighten</span>
+    <span class="fn-sum">提高亮度，--amount 百分点</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool lighten -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#808080</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#8d8d8d</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>10</code></td><td>调整幅度（百分点）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#808080</span><span class="k">  --amount 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#8d8d8d</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="darken" data-fn="color_tool darken 调整 降低亮度，--amount 百分点">
+  <div class="fn-head">
+    <span class="fn-name">darken</span>
+    <span class="fn-sum">降低亮度，--amount 百分点</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool darken -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#808080</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#787878</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>10</code></td><td>调整幅度（百分点）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#808080</span><span class="k">  --amount 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#787878</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="saturate" data-fn="color_tool saturate 调整 提高饱和度，--amount 百分点">
+  <div class="fn-head">
+    <span class="fn-name">saturate</span>
+    <span class="fn-sum">提高饱和度，--amount 百分点</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool saturate -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#808080</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#c04141</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>10</code></td><td>调整幅度（百分点）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#808080</span><span class="k">  --amount 50</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#c04141</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="desaturate" data-fn="color_tool desaturate 调整 降低饱和度，--amount 百分点">
+  <div class="fn-head">
+    <span class="fn-name">desaturate</span>
+    <span class="fn-sum">降低饱和度，--amount 百分点</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool desaturate -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#bf4040</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>10</code></td><td>调整幅度（百分点）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span><span class="k">  --amount 50</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#bf4040</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="complement" data-fn="color_tool complement 调整 互补色">
+  <div class="fn-head">
+    <span class="fn-name">complement</span>
+    <span class="fn-sum">互补色</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool complement -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#00ffff</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#00ffff</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="invert" data-fn="color_tool invert 调整 反色">
+  <div class="fn-head">
+    <span class="fn-name">invert</span>
+    <span class="fn-sum">反色</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool invert -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#00ffff</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#00ffff</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="grayscale" data-fn="color_tool grayscale 调整 转灰度（按感知亮度加权）">
+  <div class="fn-head">
+    <span class="fn-name">grayscale</span>
+    <span class="fn-sum">转灰度（按感知亮度加权）</span>
+    <span class="tag">调整</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool grayscale -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#363636</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#363636</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E7%BB%84%E5%90%88" class="anchor"><a href="#g-%E7%BB%84%E5%90%88">组合（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="mix" data-fn="color_tool mix 组合 混合两个颜色，第 3 个值为 B 的占比(0~100，默认 50)">
+  <div class="fn-head">
+    <span class="fn-name">mix</span>
+    <span class="fn-sum">混合两个颜色，第 3 个值为 B 的占比(0~100，默认 50)</span>
+    <span class="tag">组合</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool mix -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ff0000 #0000ff</div>
+      <div class="hint">颜色A 颜色B [占比]</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#800080</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ff0000 #0000ff</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#800080</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="gradient" data-fn="color_tool gradient 组合 生成渐变色卡，输入 &quot;颜色A 颜色B 步数&quot;，每行一个色值">
+  <div class="fn-head">
+    <span class="fn-name">gradient</span>
+    <span class="fn-sum">生成渐变色卡，输入 &quot;颜色A 颜色B 步数&quot;，每行一个色值</span>
+    <span class="tag">组合</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool gradient -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#000000 #ffffff 3</div>
+      <div class="hint">颜色A 颜色B 步数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">#000000
+#808080
+#ffffff</div>
+      <div class="hint">布局：rows</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#000000 #ffffff 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">#000000
+#808080
+#ffffff</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%BA%A6%E9%87%8F" class="anchor"><a href="#g-%E5%BA%A6%E9%87%8F">度量（5）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="luminance" data-fn="color_tool luminance 度量 WCAG 相对亮度 0~1">
+  <div class="fn-head">
+    <span class="fn-name">luminance</span>
+    <span class="fn-sum">WCAG 相对亮度 0~1</span>
+    <span class="tag">度量</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool luminance -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ffffff</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ffffff</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="contrast_ratio" data-fn="color_tool contrast_ratio 度量 两色对比度（WCAG 1~21），并给出 AA/AAA 结论">
+  <div class="fn-head">
+    <span class="fn-name">contrast_ratio</span>
+    <span class="fn-sum">两色对比度（WCAG 1~21），并给出 AA/AAA 结论</span>
+    <span class="tag">度量</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool contrast_ratio -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#000000 #ffffff</div>
+      <div class="hint">两个颜色</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">21 A AA AAA</div>
+      <div class="hint">布局：text</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#000000 #ffffff</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">21 A AA AAA</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="is_light" data-fn="color_tool is_light 度量 是否为浅色，输出 true/false">
+  <div class="fn-head">
+    <span class="fn-name">is_light</span>
+    <span class="fn-sum">是否为浅色，输出 true/false</span>
+    <span class="tag">度量</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool is_light -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#ffffff</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">布局：boolean</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#ffffff</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="is_dark" data-fn="color_tool is_dark 度量 是否为深色，输出 true/false">
+  <div class="fn-head">
+    <span class="fn-name">is_dark</span>
+    <span class="fn-sum">是否为深色，输出 true/false</span>
+    <span class="tag">度量</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool is_dark -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#000000</div>
+      <div class="hint">颜色值</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">布局：boolean</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#000000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="distance" data-fn="color_tool distance 度量 两色的 RGB 欧氏距离">
+  <div class="fn-head">
+    <span class="fn-name">distance</span>
+    <span class="fn-sum">两色的 RGB 欧氏距离</span>
+    <span class="tag">度量</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>color_tool distance -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">#000000 #ffffff</div>
+      <div class="hint">两个颜色</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">441.67295593</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">#000000 #ffffff</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">441.67295593</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="unit_tool.html">unit_tool</a></span>
+<span><a href="image_tool.html">image_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

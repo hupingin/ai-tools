@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>csv_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link on" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">csv_tool</a></h1>
+<p class="lead">CSV 表格工具 — CSV 解析与生成、列选择筛选排序、去重、聚合统计、JSON 互转</p>
+<div class="chips">
+  <span class="chip">通用 / 数据</span>
+  <span class="chip"><b>16</b> 个函数</span>
+  <span class="chip">用法 <code>csv_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>csv_tool list            # 列出全部函数
+csv_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+csv_tool schema &lt;fn&gt;    # JSON 机器契约
+csv_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#info">概览 · info</a>
+<a href="#count">概览 · count</a>
+<a href="#pretty">概览 · pretty</a>
+<a href="#to_json">转换 · to_json</a>
+<a href="#from_json">转换 · from_json</a>
+<a href="#transpose">转换 · transpose</a>
+<a href="#select">选择 · select</a>
+<a href="#head">选择 · head</a>
+<a href="#tail">选择 · tail</a>
+<a href="#filter">选择 · filter</a>
+<a href="#sort">选择 · sort</a>
+<a href="#dedupe">选择 · dedupe</a>
+<a href="#aggregate">聚合 · aggregate</a>
+<a href="#stats">聚合 · stats</a>
+<a href="#group_by">聚合 · group_by</a>
+<a href="#unique">聚合 · unique</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 csv_tool 的 16 个函数中搜索…">
+<p class="count" data-count>共 16 个函数</p>
+<div data-group>
+<h2 id="g-%E6%A6%82%E8%A7%88" class="anchor"><a href="#g-%E6%A6%82%E8%A7%88">概览（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="info" data-fn="csv_tool info 概览 输出行列数与列名">
+  <div class="fn-head">
+    <span class="fn-name">info</span>
+    <span class="fn-sum">输出行列数与列名</span>
+    <span class="tag">概览</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool info -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">name,age
+Tom,18
+Ann,20</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">rows 2
+cols 2
+columns name,age</div>
+      <div class="hint">每行一项：键 值</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">name,age
+Tom,18
+Ann,20</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">rows 2
+cols 2
+columns name,age</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="count" data-fn="csv_tool count 概览 数据行数（不含表头）">
+  <div class="fn-head">
+    <span class="fn-name">count</span>
+    <span class="fn-sum">数据行数（不含表头）</span>
+    <span class="tag">概览</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool count -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+1
+2
+3</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+1
+2
+3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="pretty" data-fn="csv_tool pretty 概览 对齐成等宽文本表格">
+  <div class="fn-head">
+    <span class="fn-name">pretty</span>
+    <span class="fn-sum">对齐成等宽文本表格</span>
+    <span class="tag">概览</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool pretty -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">name,age
+Tom,18</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">NAME  AGE
+----  ---
+Tom   18</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">name,age
+Tom,18</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">NAME  AGE
+----  ---
+Tom   18</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%BD%AC%E6%8D%A2" class="anchor"><a href="#g-%E8%BD%AC%E6%8D%A2">转换（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="to_json" data-fn="csv_tool to_json 转换 CSV 转 JSON 数组（每行为一个对象）">
+  <div class="fn-head">
+    <span class="fn-name">to_json</span>
+    <span class="fn-sum">CSV 转 JSON 数组（每行为一个对象）</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool to_json -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">name,age
+Tom,18</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">[
+  {
+    &quot;name&quot;: &quot;Tom&quot;,
+    &quot;age&quot;: &quot;18&quot;
+  }
+]</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">name,age
+Tom,18</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">[
+  {
+    &quot;name&quot;: &quot;Tom&quot;,
+    &quot;age&quot;: &quot;18&quot;
+  }
+]</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="from_json" data-fn="csv_tool from_json 转换 JSON 对象数组转 CSV">
+  <div class="fn-head">
+    <span class="fn-name">from_json</span>
+    <span class="fn-sum">JSON 对象数组转 CSV</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool from_json -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">[{&quot;name&quot;:&quot;Tom&quot;,&quot;age&quot;:18}]</div>
+      <div class="hint">JSON 对象数组</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">name,age
+Tom,18</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">[{&quot;name&quot;:&quot;Tom&quot;,&quot;age&quot;:18}]</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">name,age
+Tom,18</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="transpose" data-fn="csv_tool transpose 转换 行列转置">
+  <div class="fn-head">
+    <span class="fn-name">transpose</span>
+    <span class="fn-sum">行列转置</span>
+    <span class="tag">转换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool transpose -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a,b
+1,2</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a,1
+b,2</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a,b
+1,2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a,1
+b,2</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E9%80%89%E6%8B%A9" class="anchor"><a href="#g-%E9%80%89%E6%8B%A9">选择（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="select" data-fn="csv_tool select 选择 挑选列，--cols 逗号分隔">
+  <div class="fn-head">
+    <span class="fn-name">select</span>
+    <span class="fn-sum">挑选列，--cols 逗号分隔</span>
+    <span class="tag">选择</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool select -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a,b,c
+1,2,3</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a,c
+1,3</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--cols</code></td><td><code>VAL</code></td><td></td><td>列名，逗号分隔（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a,b,c
+1,2,3</span><span class="k">  --cols a,c</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a,c
+1,3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="head" data-fn="csv_tool head 选择 取前 --n 行">
+  <div class="fn-head">
+    <span class="fn-name">head</span>
+    <span class="fn-sum">取前 --n 行</span>
+    <span class="tag">选择</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool head -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+1
+2
+3</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+1
+2</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>10</code></td><td>行数</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+1
+2
+3</span><span class="k">  --n 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+1
+2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="tail" data-fn="csv_tool tail 选择 取后 --n 行">
+  <div class="fn-head">
+    <span class="fn-name">tail</span>
+    <span class="fn-sum">取后 --n 行</span>
+    <span class="tag">选择</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool tail -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+1
+2
+3</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+2
+3</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>10</code></td><td>行数</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+1
+2
+3</span><span class="k">  --n 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+2
+3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="filter" data-fn="csv_tool filter 选择 按列筛选：--col --op --value">
+  <div class="fn-head">
+    <span class="fn-name">filter</span>
+    <span class="fn-sum">按列筛选：--col --op --value</span>
+    <span class="tag">选择</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool filter -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">n
+1
+5
+9</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">n
+5
+9</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--col</code></td><td><code>VAL</code></td><td></td><td>列名（必填）</td></tr><tr><td><code>--op</code></td><td><code>VAL</code></td><td><code>eq</code></td><td>eq|ne|gt|gte|lt|lte|contains|starts|ends|regex</td></tr><tr><td><code>--value</code></td><td><code>VAL</code></td><td><code></code></td><td>比较值</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">n
+1
+5
+9</span><span class="k">  --col n --op gte --value 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">n
+5
+9</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sort" data-fn="csv_tool sort 选择 按列排序，--desc 降序，--numeric 数值比较">
+  <div class="fn-head">
+    <span class="fn-name">sort</span>
+    <span class="fn-sum">按列排序，--desc 降序，--numeric 数值比较</span>
+    <span class="tag">选择</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool sort -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">n
+3
+1
+2</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">n
+1
+2
+3</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--by</code></td><td><code>VAL</code></td><td></td><td>列名（必填）</td></tr><tr><td><code>--desc</code></td><td></td><td></td><td>降序</td></tr><tr><td><code>--numeric</code></td><td></td><td></td><td>按数值比较</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">n
+3
+1
+2</span><span class="k">  --by n --numeric true</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">n
+1
+2
+3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="dedupe" data-fn="csv_tool dedupe 选择 按整行去重，--col 指定按某列去重">
+  <div class="fn-head">
+    <span class="fn-name">dedupe</span>
+    <span class="fn-sum">按整行去重，--col 指定按某列去重</span>
+    <span class="tag">选择</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool dedupe -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+1
+1
+2</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+1
+2</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--col</code></td><td><code>VAL</code></td><td></td><td>按该列去重，缺省按整行</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+1
+1
+2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+1
+2</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%81%9A%E5%90%88" class="anchor"><a href="#g-%E8%81%9A%E5%90%88">聚合（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="aggregate" data-fn="csv_tool aggregate 聚合 对列做聚合：--col --fn (sum|mean|min|max|count|median|stdev)">
+  <div class="fn-head">
+    <span class="fn-name">aggregate</span>
+    <span class="fn-sum">对列做聚合：--col --fn (sum|mean|min|max|count|median|stdev)</span>
+    <span class="tag">聚合</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool aggregate -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">n
+1
+2
+3</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">6</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--col</code></td><td><code>VAL</code></td><td></td><td>列名（必填）</td></tr><tr><td><code>--fn</code></td><td><code>VAL</code></td><td><code>sum</code></td><td>sum|mean|min|max|count|median|stdev</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">n
+1
+2
+3</span><span class="k">  --col n --fn sum</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">6</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="stats" data-fn="csv_tool stats 聚合 数值列描述统计">
+  <div class="fn-head">
+    <span class="fn-name">stats</span>
+    <span class="fn-sum">数值列描述统计</span>
+    <span class="tag">聚合</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool stats -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">n
+1
+2
+3</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">count 3
+sum 6
+mean 2
+min 1
+max 3
+median 2
+stdev 0.816496580928</div>
+      <div class="hint">每行一项：键 值</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--col</code></td><td><code>VAL</code></td><td></td><td>列名（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">n
+1
+2
+3</span><span class="k">  --col n</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">count 3
+sum 6
+mean 2
+min 1
+max 3
+median 2
+stdev 0.816496580928</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="group_by" data-fn="csv_tool group_by 聚合 分组聚合：--by 分组列，--agg &quot;列:函数&quot; 可多次用逗号分隔">
+  <div class="fn-head">
+    <span class="fn-name">group_by</span>
+    <span class="fn-sum">分组聚合：--by 分组列，--agg &quot;列:函数&quot; 可多次用逗号分隔</span>
+    <span class="tag">聚合</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool group_by -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">g,n
+a,1
+a,2
+b,5</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">g,n_sum
+a,3
+b,5</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--by</code></td><td><code>VAL</code></td><td></td><td>分组列（必填）</td></tr><tr><td><code>--agg</code></td><td><code>VAL</code></td><td></td><td>如 &quot;n:sum,m:mean&quot;（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">g,n
+a,1
+a,2
+b,5</span><span class="k">  --by g --agg n:sum</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">g,n_sum
+a,3
+b,5</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="unique" data-fn="csv_tool unique 聚合 某列的去重值，每行一个">
+  <div class="fn-head">
+    <span class="fn-name">unique</span>
+    <span class="fn-sum">某列的去重值，每行一个</span>
+    <span class="tag">聚合</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>csv_tool unique -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">g
+a
+b
+a</div>
+      <div class="hint">CSV 文本，第 1 行为表头</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+b</div>
+      <div class="hint">CSV 文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--delim</code></td><td><code>VAL</code></td><td><code>,</code></td><td>字段分隔符，默认 &quot;,&quot;</td></tr><tr><td><code>--no-header</code></td><td></td><td></td><td>输入无表头，列名用 col1 col2 ...</td></tr><tr><td><code>--col</code></td><td><code>VAL</code></td><td></td><td>列名（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">g
+a
+b
+a</span><span class="k">  --col g</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+b</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="json_tool.html">json_tool</a></span>
+<span><a href="datetime_tool.html">datetime_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

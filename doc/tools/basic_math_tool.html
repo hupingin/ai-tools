@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>basic_math_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link on" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">basic_math_tool</a></h1>
+<p class="lead">基础数学工具 — 加减乘除、取整、指数对数、三角、数论、进制转换</p>
+<div class="chips">
+  <span class="chip">通用 / 数学</span>
+  <span class="chip"><b>40</b> 个函数</span>
+  <span class="chip">用法 <code>basic_math_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>basic_math_tool list            # 列出全部函数
+basic_math_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+basic_math_tool schema &lt;fn&gt;    # JSON 机器契约
+basic_math_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#add">算术 · add</a>
+<a href="#sub">算术 · sub</a>
+<a href="#mul">算术 · mul</a>
+<a href="#div">算术 · div</a>
+<a href="#mod">算术 · mod</a>
+<a href="#pow">算术 · pow</a>
+<a href="#neg">算术 · neg</a>
+<a href="#abs">算术 · abs</a>
+<a href="#sum">算术 · sum</a>
+<a href="#product">算术 · product</a>
+<a href="#floor">取整 · floor</a>
+<a href="#ceil">取整 · ceil</a>
+<a href="#trunc">取整 · trunc</a>
+<a href="#round">取整 · round</a>
+<a href="#min">比较 · min</a>
+<a href="#max">比较 · max</a>
+<a href="#clamp">比较 · clamp</a>
+<a href="#sqrt">指数对数 · sqrt</a>
+<a href="#cbrt">指数对数 · cbrt</a>
+<a href="#exp">指数对数 · exp</a>
+<a href="#ln">指数对数 · ln</a>
+<a href="#log10">指数对数 · log10</a>
+<a href="#log">指数对数 · log</a>
+<a href="#sin">三角 · sin</a>
+<a href="#cos">三角 · cos</a>
+<a href="#tan">三角 · tan</a>
+<a href="#asin">三角 · asin</a>
+<a href="#acos">三角 · acos</a>
+<a href="#atan">三角 · atan</a>
+<a href="#atan2">三角 · atan2</a>
+<a href="#hypot">三角 · hypot</a>
+<a href="#gcd">数论 · gcd</a>
+<a href="#lcm">数论 · lcm</a>
+<a href="#factorial">数论 · factorial</a>
+<a href="#fibonacci">数论 · fibonacci</a>
+<a href="#is_prime">数论 · is_prime</a>
+<a href="#prime_factors">数论 · prime_factors</a>
+<a href="#next_prime">数论 · next_prime</a>
+<a href="#base">进制 · base</a>
+<a href="#constant">常量 · constant</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 basic_math_tool 的 40 个函数中搜索…">
+<p class="count" data-count>共 40 个函数</p>
+<div data-group>
+<h2 id="g-%E7%AE%97%E6%9C%AF" class="anchor"><a href="#g-%E7%AE%97%E6%9C%AF">算术（10）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="add" data-fn="basic_math_tool add 算术 两数相加">
+  <div class="fn-head">
+    <span class="fn-name">add</span>
+    <span class="fn-sum">两数相加</span>
+    <span class="tag">算术</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool add -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2</div>
+      <div class="hint">两个数字：a b</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sub" data-fn="basic_math_tool sub 算术 两数相减 (a - b)">
+  <div class="fn-head">
+    <span class="fn-name">sub</span>
+    <span class="fn-sum">两数相减 (a - b)</span>
+    <span class="tag">算术</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool sub -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">5 3</div>
+      <div class="hint">2 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">5 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="mul" data-fn="basic_math_tool mul 算术 两数相乘">
+  <div class="fn-head">
+    <span class="fn-name">mul</span>
+    <span class="fn-sum">两数相乘</span>
+    <span class="tag">算术</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool mul -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">6 7</div>
+      <div class="hint">2 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">42</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">6 7</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">42</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="div" data-fn="basic_math_tool div 算术 两数相除 (a / b)">
+  <div class="fn-head">
+    <span class="fn-name">div</span>
+    <span class="fn-sum">两数相除 (a / b)</span>
+    <span class="tag">算术</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool div -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10 4</div>
+      <div class="hint">2 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2.5</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2.5</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="mod" data-fn="basic_math_tool mod 算术 取余 (a % b)">
+  <div class="fn-head">
+    <span class="fn-name">mod</span>
+    <span class="fn-sum">取余 (a % b)</span>
+    <span class="tag">算术</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool mod -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">17 5</div>
+      <div class="hint">2 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">17 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="pow" data-fn="basic_math_tool pow 算术 幂 (a ^ b)">
+  <div class="fn-head">
+    <span class="fn-name">pow</span>
+    <span class="fn-sum">幂 (a ^ b)</span>
+    <span class="tag">算术</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool pow -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2 10</div>
+      <div class="hint">2 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1024</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2 10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1024</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="neg" data-fn="basic_math_tool neg 算术 取负">
+  <div class="fn-head">
+    <span class="fn-name">neg</span>
+    <span class="fn-sum">取负</span>
+    <span class="tag">算术</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool neg -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">8</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">-8</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">8</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">-8</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="abs" data-fn="basic_math_tool abs 算术 绝对值">
+  <div class="fn-head">
+    <span class="fn-name">abs</span>
+    <span class="fn-sum">绝对值</span>
+    <span class="tag">算术</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool abs -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">-3.5</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3.5</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">-3.5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3.5</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sum" data-fn="basic_math_tool sum 算术 求和（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">sum</span>
+    <span class="fn-sum">求和（任意个数）</span>
+    <span class="tag">算术</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool sum -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">10</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">10</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="product" data-fn="basic_math_tool product 算术 连乘（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">product</span>
+    <span class="fn-sum">连乘（任意个数）</span>
+    <span class="tag">算术</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool product -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2 3 4</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">24</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2 3 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">24</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%8F%96%E6%95%B4" class="anchor"><a href="#g-%E5%8F%96%E6%95%B4">取整（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="floor" data-fn="basic_math_tool floor 取整 向下取整">
+  <div class="fn-head">
+    <span class="fn-name">floor</span>
+    <span class="fn-sum">向下取整</span>
+    <span class="tag">取整</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool floor -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">3.7</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">3.7</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="ceil" data-fn="basic_math_tool ceil 取整 向上取整">
+  <div class="fn-head">
+    <span class="fn-name">ceil</span>
+    <span class="fn-sum">向上取整</span>
+    <span class="tag">取整</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool ceil -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">3.2</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">4</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">3.2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="trunc" data-fn="basic_math_tool trunc 取整 截断小数">
+  <div class="fn-head">
+    <span class="fn-name">trunc</span>
+    <span class="fn-sum">截断小数</span>
+    <span class="tag">取整</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool trunc -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">-3.7</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">-3</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">-3.7</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">-3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="round" data-fn="basic_math_tool round 取整 四舍五入，--digits 指定小数位">
+  <div class="fn-head">
+    <span class="fn-name">round</span>
+    <span class="fn-sum">四舍五入，--digits 指定小数位</span>
+    <span class="tag">取整</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool round -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">3.14159</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --digits</code></td><td><code>VAL</code></td><td><code>0</code></td><td>保留小数位，默认 0</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">3.14159</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%AF%94%E8%BE%83" class="anchor"><a href="#g-%E6%AF%94%E8%BE%83">比较（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="min" data-fn="basic_math_tool min 比较 最小值（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">min</span>
+    <span class="fn-sum">最小值（任意个数）</span>
+    <span class="tag">比较</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool min -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">4 1 9 2</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">4 1 9 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="max" data-fn="basic_math_tool max 比较 最大值（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">max</span>
+    <span class="fn-sum">最大值（任意个数）</span>
+    <span class="tag">比较</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool max -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">4 1 9 2</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">9</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">4 1 9 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">9</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="clamp" data-fn="basic_math_tool clamp 比较 区间截断 (x, lo, hi)">
+  <div class="fn-head">
+    <span class="fn-name">clamp</span>
+    <span class="fn-sum">区间截断 (x, lo, hi)</span>
+    <span class="tag">比较</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool clamp -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">15 0 10</div>
+      <div class="hint">三个数字：x lo hi</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">10</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">15 0 10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">10</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%8C%87%E6%95%B0%E5%AF%B9%E6%95%B0" class="anchor"><a href="#g-%E6%8C%87%E6%95%B0%E5%AF%B9%E6%95%B0">指数对数（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="sqrt" data-fn="basic_math_tool sqrt 指数对数 平方根">
+  <div class="fn-head">
+    <span class="fn-name">sqrt</span>
+    <span class="fn-sum">平方根</span>
+    <span class="tag">指数对数</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool sqrt -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">16</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">4</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">16</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="cbrt" data-fn="basic_math_tool cbrt 指数对数 立方根">
+  <div class="fn-head">
+    <span class="fn-name">cbrt</span>
+    <span class="fn-sum">立方根</span>
+    <span class="tag">指数对数</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool cbrt -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">27</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">27</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="exp" data-fn="basic_math_tool exp 指数对数 e 的 x 次方">
+  <div class="fn-head">
+    <span class="fn-name">exp</span>
+    <span class="fn-sum">e 的 x 次方</span>
+    <span class="tag">指数对数</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool exp -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2.718281828459</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2.718281828459</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="ln" data-fn="basic_math_tool ln 指数对数 自然对数">
+  <div class="fn-head">
+    <span class="fn-name">ln</span>
+    <span class="fn-sum">自然对数</span>
+    <span class="tag">指数对数</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool ln -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="log10" data-fn="basic_math_tool log10 指数对数 常用对数">
+  <div class="fn-head">
+    <span class="fn-name">log10</span>
+    <span class="fn-sum">常用对数</span>
+    <span class="tag">指数对数</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool log10 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">100</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">100</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="log" data-fn="basic_math_tool log 指数对数 以 b 为底的对数 (x, b)">
+  <div class="fn-head">
+    <span class="fn-name">log</span>
+    <span class="fn-sum">以 b 为底的对数 (x, b)</span>
+    <span class="tag">指数对数</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool log -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">8 2</div>
+      <div class="hint">两个数字：真数 底数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">8 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E4%B8%89%E8%A7%92" class="anchor"><a href="#g-%E4%B8%89%E8%A7%92">三角（8）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="sin" data-fn="basic_math_tool sin 三角 正弦，--deg 使用角度">
+  <div class="fn-head">
+    <span class="fn-name">sin</span>
+    <span class="fn-sum">正弦，--deg 使用角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool sin -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="cos" data-fn="basic_math_tool cos 三角 余弦，--deg 使用角度">
+  <div class="fn-head">
+    <span class="fn-name">cos</span>
+    <span class="fn-sum">余弦，--deg 使用角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool cos -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="tan" data-fn="basic_math_tool tan 三角 正切，--deg 使用角度">
+  <div class="fn-head">
+    <span class="fn-name">tan</span>
+    <span class="fn-sum">正切，--deg 使用角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool tan -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="asin" data-fn="basic_math_tool asin 三角 反正弦，--deg 输出角度">
+  <div class="fn-head">
+    <span class="fn-name">asin</span>
+    <span class="fn-sum">反正弦，--deg 输出角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool asin -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="acos" data-fn="basic_math_tool acos 三角 反余弦，--deg 输出角度">
+  <div class="fn-head">
+    <span class="fn-name">acos</span>
+    <span class="fn-sum">反余弦，--deg 输出角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool acos -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="atan" data-fn="basic_math_tool atan 三角 反正切，--deg 输出角度">
+  <div class="fn-head">
+    <span class="fn-name">atan</span>
+    <span class="fn-sum">反正切，--deg 输出角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool atan -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="atan2" data-fn="basic_math_tool atan2 三角 四象限反正切 (y, x)，--deg 输出角度">
+  <div class="fn-head">
+    <span class="fn-name">atan2</span>
+    <span class="fn-sum">四象限反正切 (y, x)，--deg 输出角度</span>
+    <span class="tag">三角</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool atan2 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 1</div>
+      <div class="hint">2 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.785398163397</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --deg</code></td><td></td><td></td><td>输入/输出按角度(degree)而非弧度处理</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 1</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.785398163397</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="hypot" data-fn="basic_math_tool hypot 三角 欧氏距离 sqrt(x^2+y^2)（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">hypot</span>
+    <span class="fn-sum">欧氏距离 sqrt(x^2+y^2)（任意个数）</span>
+    <span class="tag">三角</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool hypot -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">3 4</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">5</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">3 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">5</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%95%B0%E8%AE%BA" class="anchor"><a href="#g-%E6%95%B0%E8%AE%BA">数论（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="gcd" data-fn="basic_math_tool gcd 数论 最大公约数（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">gcd</span>
+    <span class="fn-sum">最大公约数（任意个数）</span>
+    <span class="tag">数论</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool gcd -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">12 18</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">6</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">12 18</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">6</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="lcm" data-fn="basic_math_tool lcm 数论 最小公倍数（任意个数）">
+  <div class="fn-head">
+    <span class="fn-name">lcm</span>
+    <span class="fn-sum">最小公倍数（任意个数）</span>
+    <span class="tag">数论</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool lcm -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">4 6</div>
+      <div class="hint">若干数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">12</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">4 6</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">12</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="factorial" data-fn="basic_math_tool factorial 数论 阶乘 n!">
+  <div class="fn-head">
+    <span class="fn-name">factorial</span>
+    <span class="fn-sum">阶乘 n!</span>
+    <span class="tag">数论</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool factorial -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">5</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">120</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">120</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="fibonacci" data-fn="basic_math_tool fibonacci 数论 第 n 个斐波那契数 (F(0)=0)">
+  <div class="fn-head">
+    <span class="fn-name">fibonacci</span>
+    <span class="fn-sum">第 n 个斐波那契数 (F(0)=0)</span>
+    <span class="tag">数论</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool fibonacci -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">55</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">55</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="is_prime" data-fn="basic_math_tool is_prime 数论 素数判定，输出 true/false">
+  <div class="fn-head">
+    <span class="fn-name">is_prime</span>
+    <span class="fn-sum">素数判定，输出 true/false</span>
+    <span class="tag">数论</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool is_prime -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">97</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">97</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="prime_factors" data-fn="basic_math_tool prime_factors 数论 质因数分解，输出空白分隔的质因数">
+  <div class="fn-head">
+    <span class="fn-name">prime_factors</span>
+    <span class="fn-sum">质因数分解，输出空白分隔的质因数</span>
+    <span class="tag">数论</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool prime_factors -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">360</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2 2 2 3 3 5</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">360</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2 2 2 3 3 5</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="next_prime" data-fn="basic_math_tool next_prime 数论 大于等于 n 的最小素数">
+  <div class="fn-head">
+    <span class="fn-name">next_prime</span>
+    <span class="fn-sum">大于等于 n 的最小素数</span>
+    <span class="tag">数论</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool next_prime -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">100</div>
+      <div class="hint">1 个数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">101</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">100</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">101</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%BF%9B%E5%88%B6" class="anchor"><a href="#g-%E8%BF%9B%E5%88%B6">进制（1）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="base" data-fn="basic_math_tool base 进制 进制转换 (数值, 原进制, 目标进制)，2~36">
+  <div class="fn-head">
+    <span class="fn-name">base</span>
+    <span class="fn-sum">进制转换 (数值, 原进制, 目标进制)，2~36</span>
+    <span class="tag">进制</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool base -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">255 10 16</div>
+      <div class="hint">三个数字：数值 原进制 目标进制</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">FF</div>
+      <div class="hint">计算结果</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">255 10 16</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">FF</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%B8%B8%E9%87%8F" class="anchor"><a href="#g-%E5%B8%B8%E9%87%8F">常量（1）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="constant" data-fn="basic_math_tool constant 常量 取数学常量：pi / e / phi / sqrt2 / ln2 / ln10">
+  <div class="fn-head">
+    <span class="fn-name">constant</span>
+    <span class="fn-sum">取数学常量：pi / e / phi / sqrt2 / ln2 / ln10</span>
+    <span class="tag">常量</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>basic_math_tool constant -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">pi</div>
+      <div class="hint">常量名，如 pi</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3.14159265359</div>
+      <div class="hint">常量值</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">pi</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3.14159265359</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span></span>
+<span><a href="statistics_tool.html">statistics_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

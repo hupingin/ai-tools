@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>image_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link on" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">image_tool</a></h1>
+<p class="lead">图像处理工具 — 零依赖 PNG 编解码：信息统计、缩放裁剪旋转、色彩调整、模糊锐化边缘、图像比较与字符画</p>
+<div class="chips">
+  <span class="chip">设计 / 视觉</span>
+  <span class="chip"><b>21</b> 个函数</span>
+  <span class="chip">用法 <code>image_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>image_tool list            # 列出全部函数
+image_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+image_tool schema &lt;fn&gt;    # JSON 机器契约
+image_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#info">信息 · info</a>
+<a href="#stats">信息 · stats</a>
+<a href="#histogram">信息 · histogram</a>
+<a href="#resize">几何 · resize</a>
+<a href="#thumbnail">几何 · thumbnail</a>
+<a href="#crop">几何 · crop</a>
+<a href="#rotate">几何 · rotate</a>
+<a href="#flip">几何 · flip</a>
+<a href="#grayscale">颜色 · grayscale</a>
+<a href="#invert">颜色 · invert</a>
+<a href="#brightness">颜色 · brightness</a>
+<a href="#contrast">颜色 · contrast</a>
+<a href="#saturate">颜色 · saturate</a>
+<a href="#sepia">颜色 · sepia</a>
+<a href="#threshold">颜色 · threshold</a>
+<a href="#blur">滤镜 · blur</a>
+<a href="#sharpen">滤镜 · sharpen</a>
+<a href="#edge">滤镜 · edge</a>
+<a href="#emboss">滤镜 · emboss</a>
+<a href="#diff">比较 · diff</a>
+<a href="#to_text">比较 · to_text</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 image_tool 的 21 个函数中搜索…">
+<p class="count" data-count>共 21 个函数</p>
+<div data-group>
+<h2 id="g-%E4%BF%A1%E6%81%AF" class="anchor"><a href="#g-%E4%BF%A1%E6%81%AF">信息（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="info" data-fn="image_tool info 信息 输出图像基本信息">
+  <div class="fn-head">
+    <span class="fn-name">info</span>
+    <span class="fn-sum">输出图像基本信息</span>
+    <span class="tag">信息</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool info -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">每行一项：键 值</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="stats" data-fn="image_tool stats 信息 输出平均色与亮度统计">
+  <div class="fn-head">
+    <span class="fn-name">stats</span>
+    <span class="fn-sum">输出平均色与亮度统计</span>
+    <span class="tag">信息</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool stats -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">每行一项：键 值</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="histogram" data-fn="image_tool histogram 信息 灰度直方图，--bins 桶数（默认 16）">
+  <div class="fn-head">
+    <span class="fn-name">histogram</span>
+    <span class="fn-sum">灰度直方图，--bins 桶数（默认 16）</span>
+    <span class="tag">信息</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool histogram -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">每行 &quot;下界 上界 像素数&quot;</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-b, --bins</code></td><td><code>VAL</code></td><td><code>16</code></td><td>桶数</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%87%A0%E4%BD%95" class="anchor"><a href="#g-%E5%87%A0%E4%BD%95">几何（5）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="resize" data-fn="image_tool resize 几何 缩放，--width/--height 给一个则按比例自适应">
+  <div class="fn-head">
+    <span class="fn-name">resize</span>
+    <span class="fn-sum">缩放，--width/--height 给一个则按比例自适应</span>
+    <span class="tag">几何</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool resize -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-w, --width</code></td><td><code>VAL</code></td><td></td><td>目标宽</td></tr><tr><td><code>-H, --height</code></td><td><code>VAL</code></td><td></td><td>目标高</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="thumbnail" data-fn="image_tool thumbnail 几何 生成 --size × --size 内的缩略图（保持比例，透明填充）">
+  <div class="fn-head">
+    <span class="fn-name">thumbnail</span>
+    <span class="fn-sum">生成 --size × --size 内的缩略图（保持比例，透明填充）</span>
+    <span class="tag">几何</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool thumbnail -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-s, --size</code></td><td><code>VAL</code></td><td><code>128</code></td><td>最大边长</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="crop" data-fn="image_tool crop 几何 裁剪，--x --y --w --h">
+  <div class="fn-head">
+    <span class="fn-name">crop</span>
+    <span class="fn-sum">裁剪，--x --y --w --h</span>
+    <span class="tag">几何</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool crop -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--x</code></td><td><code>VAL</code></td><td><code>0</code></td><td>起点 X</td></tr><tr><td><code>--y</code></td><td><code>VAL</code></td><td><code>0</code></td><td>起点 Y</td></tr><tr><td><code>--w</code></td><td><code>VAL</code></td><td></td><td>宽度（必填）</td></tr><tr><td><code>--h</code></td><td><code>VAL</code></td><td></td><td>高度（必填）</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="rotate" data-fn="image_tool rotate 几何 旋转 --angle 度（90/180/270，逆时针为正）">
+  <div class="fn-head">
+    <span class="fn-name">rotate</span>
+    <span class="fn-sum">旋转 --angle 度（90/180/270，逆时针为正）</span>
+    <span class="tag">几何</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool rotate -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --angle</code></td><td><code>VAL</code></td><td><code>90</code></td><td>90|180|270|-90</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="flip" data-fn="image_tool flip 几何 镜像翻转，--dir h(水平)|v(垂直)">
+  <div class="fn-head">
+    <span class="fn-name">flip</span>
+    <span class="fn-sum">镜像翻转，--dir h(水平)|v(垂直)</span>
+    <span class="tag">几何</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool flip -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--dir</code></td><td><code>VAL</code></td><td><code>h</code></td><td>h|v</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E9%A2%9C%E8%89%B2" class="anchor"><a href="#g-%E9%A2%9C%E8%89%B2">颜色（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="grayscale" data-fn="image_tool grayscale 颜色 转灰度（感知亮度加权）">
+  <div class="fn-head">
+    <span class="fn-name">grayscale</span>
+    <span class="fn-sum">转灰度（感知亮度加权）</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool grayscale -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="invert" data-fn="image_tool invert 颜色 反色">
+  <div class="fn-head">
+    <span class="fn-name">invert</span>
+    <span class="fn-sum">反色</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool invert -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="brightness" data-fn="image_tool brightness 颜色 调整亮度，--amount 为 -255~255 的增量">
+  <div class="fn-head">
+    <span class="fn-name">brightness</span>
+    <span class="fn-sum">调整亮度，--amount 为 -255~255 的增量</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool brightness -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>30</code></td><td>亮度增量</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="contrast" data-fn="image_tool contrast 颜色 调整对比度，--amount 为系数（1 为不变）">
+  <div class="fn-head">
+    <span class="fn-name">contrast</span>
+    <span class="fn-sum">调整对比度，--amount 为系数（1 为不变）</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool contrast -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>1.5</code></td><td>对比度系数</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="saturate" data-fn="image_tool saturate 颜色 调整饱和度，--amount 为系数（0 为去色）">
+  <div class="fn-head">
+    <span class="fn-name">saturate</span>
+    <span class="fn-sum">调整饱和度，--amount 为系数（0 为去色）</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool saturate -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-a, --amount</code></td><td><code>VAL</code></td><td><code>1.5</code></td><td>饱和度系数</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="sepia" data-fn="image_tool sepia 颜色 复古棕褐色调">
+  <div class="fn-head">
+    <span class="fn-name">sepia</span>
+    <span class="fn-sum">复古棕褐色调</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool sepia -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="threshold" data-fn="image_tool threshold 颜色 二值化，--level 阈值 0~255">
+  <div class="fn-head">
+    <span class="fn-name">threshold</span>
+    <span class="fn-sum">二值化，--level 阈值 0~255</span>
+    <span class="tag">颜色</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool threshold -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-l, --level</code></td><td><code>VAL</code></td><td><code>128</code></td><td>阈值</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%BB%A4%E9%95%9C" class="anchor"><a href="#g-%E6%BB%A4%E9%95%9C">滤镜（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="blur" data-fn="image_tool blur 滤镜 盒式模糊，--radius 半径">
+  <div class="fn-head">
+    <span class="fn-name">blur</span>
+    <span class="fn-sum">盒式模糊，--radius 半径</span>
+    <span class="tag">滤镜</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool blur -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-r, --radius</code></td><td><code>VAL</code></td><td><code>2</code></td><td>半径（像素）</td></tr></tbody></table></div>
+  </div>
+</div>
+<div class="fn" id="sharpen" data-fn="image_tool sharpen 滤镜 锐化（3x3 卷积）">
+  <div class="fn-head">
+    <span class="fn-name">sharpen</span>
+    <span class="fn-sum">锐化（3x3 卷积）</span>
+    <span class="tag">滤镜</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool sharpen -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="edge" data-fn="image_tool edge 滤镜 Sobel 边缘检测">
+  <div class="fn-head">
+    <span class="fn-name">edge</span>
+    <span class="fn-sum">Sobel 边缘检测</span>
+    <span class="tag">滤镜</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool edge -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="emboss" data-fn="image_tool emboss 滤镜 浮雕效果">
+  <div class="fn-head">
+    <span class="fn-name">emboss</span>
+    <span class="fn-sum">浮雕效果</span>
+    <span class="tag">滤镜</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool emboss -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制</div>
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%AF%94%E8%BE%83" class="anchor"><a href="#g-%E6%AF%94%E8%BE%83">比较（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="diff" data-fn="image_tool diff 比较 比较两张图：input 两行分别为图片路径，输出差异统计">
+  <div class="fn-head">
+    <span class="fn-name">diff</span>
+    <span class="fn-sum">比较两张图：input 两行分别为图片路径，输出差异统计</span>
+    <span class="tag">比较</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool diff -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">两行，每行一张图片的路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">每行一项：差异像素数、占比、平均通道差</div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="to_text" data-fn="image_tool to_text 比较 把图像转为字符画，--cols 字符列数">
+  <div class="fn-head">
+    <span class="fn-name">to_text</span>
+    <span class="fn-sum">把图像转为字符画，--cols 字符列数</span>
+    <span class="tag">比较</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>image_tool to_text -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">PNG 二进制，或第 1 行为图片路径</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val none">(不需要)</div>
+      <div class="hint">ASCII 字符画</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-c, --cols</code></td><td><code>VAL</code></td><td><code>80</code></td><td>字符列数</td></tr></tbody></table></div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="color_tool.html">color_tool</a></span>
+<span><a href="finance_tool.html">finance_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

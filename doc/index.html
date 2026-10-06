@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>总览 — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="index.html" class="on">总览</a>
+    <a href="spec.html">DESC/1.0 规范</a>
+    <a href="functions.html">全部函数</a>
+    <a href="contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link on" href="index.html">总览</a>
+<a class="side-link" href="spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="functions.html">全部函数</a>
+<a class="side-link" href="contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<section class="hero">
+    <h1>ai-tools：为 AI 重新造轮子</h1>
+    <p class="sub">软件五花八门，调用方式也五花八门。这个项目把「一个功能」收敛成一种 AI 能稳定生成、稳定解析、稳定组合的形态——统一的命令、统一的裸数据文件、统一的退出码。</p>
+    <div class="chips">
+      <span class="chip"><b>12</b> 个工具</span>
+      <span class="chip"><b>276</b> 个函数</span>
+      <span class="chip">零第三方依赖</span>
+      <span class="chip">Node ≥ 18</span>
+      <span class="chip">MIT</span>
+    </div>
+    <div class="demo">
+      <div class="demo-cell">
+        <div class="lbl">input.desc</div>
+        <div class="val">1 2</div>
+      </div>
+      <div class="demo-arrow">→</div>
+      <div class="demo-cell">
+        <div class="lbl">output.desc</div>
+        <div class="val">3</div>
+      </div>
+    </div>
+    <div class="demo-cmd">
+      <pre class="code" data-lang="bash"><code>printf '1 2' &gt; input.desc
+basic_math_tool add -i input.desc -o output.desc
+cat output.desc   # =&gt; 3</code></pre>
+    </div>
+  </section>
+<h2 id="install" class="anchor"><a href="#install">安装</a></h2>
+<pre class="code" data-lang="bash"><code>git clone https://github.com/hupingin/ai-tools.git
+cd ai-tools
+npm link          # 或 npm install -g .</code></pre>
+<p>也可以免安装直接跑：</p>
+<pre class="code" data-lang="bash"><code>node bin/basic_math_tool.js add -i input.desc -o output.desc
+node bin/ai-tools.js basic_math add -i input.desc -o output.desc   # 聚合入口，工具名可省略 _tool</code></pre>
+<h2 id="tools" class="anchor"><a href="#tools">工具一览</a></h2>
+<div class="cards">
+  <a class="card" href="tools/basic_math_tool.html">
+    <div class="cname">basic_math_tool</div>
+    <div class="cmeta">通用 / 数学 · 40 个函数</div>
+    <div class="cdesc">加减乘除、取整、指数对数、三角、数论、进制转换</div>
+  </a>
+  <a class="card" href="tools/statistics_tool.html">
+    <div class="cname">statistics_tool</div>
+    <div class="cmeta">通用 / 数据 · 27 个函数</div>
+    <div class="cdesc">描述统计、离散程度、数据变换、双序列相关与回归</div>
+  </a>
+  <a class="card" href="tools/text_tool.html">
+    <div class="cname">text_tool</div>
+    <div class="cmeta">通用 / 文本 · 44 个函数</div>
+    <div class="cdesc">统计、大小写、命名风格、清洗、查找替换、行操作、相似度</div>
+  </a>
+  <a class="card" href="tools/json_tool.html">
+    <div class="cname">json_tool</div>
+    <div class="cmeta">通用 / 数据 · 19 个函数</div>
+    <div class="cdesc">格式化、路径读写、增删改、数组筛选排序、深度合并与差异比较</div>
+  </a>
+  <a class="card" href="tools/csv_tool.html">
+    <div class="cname">csv_tool</div>
+    <div class="cmeta">通用 / 数据 · 16 个函数</div>
+    <div class="cdesc">CSV 解析与生成、列选择筛选排序、去重、聚合统计、JSON 互转</div>
+  </a>
+  <a class="card" href="tools/datetime_tool.html">
+    <div class="cname">datetime_tool</div>
+    <div class="cmeta">通用 / 时间 · 20 个函数</div>
+    <div class="cdesc">ISO8601 解析与格式化、时间加减、差值、工作日、时间戳、周期边界</div>
+  </a>
+  <a class="card" href="tools/file_tool.html">
+    <div class="cname">file_tool</div>
+    <div class="cmeta">通用 / 系统 · 19 个函数</div>
+    <div class="cdesc">文件读写、复制移动删除、属性查询、目录列举查找、哈希与全文搜索</div>
+  </a>
+  <a class="card" href="tools/crypto_tool.html">
+    <div class="cname">crypto_tool</div>
+    <div class="cmeta">安全 / 编码 · 24 个函数</div>
+    <div class="cdesc">哈希与 HMAC、Base64/Hex/URL 编解码、UUID 与随机数、AES 加解密、口令派生、古典密码</div>
+  </a>
+  <a class="card" href="tools/unit_tool.html">
+    <div class="cname">unit_tool</div>
+    <div class="cmeta">通用 / 度量 · 6 个函数</div>
+    <div class="cdesc">长度、质量、温度、时间、面积、体积、速度、数据量、压强、能量、功率、角度的换算</div>
+  </a>
+  <a class="card" href="tools/color_tool.html">
+    <div class="cname">color_tool</div>
+    <div class="cmeta">设计 / 视觉 · 22 个函数</div>
+    <div class="cdesc">HEX/RGB/HSL/HSV/CMYK 互转、明暗与饱和度调整、混色渐变、WCAG 对比度</div>
+  </a>
+  <a class="card" href="tools/image_tool.html">
+    <div class="cname">image_tool</div>
+    <div class="cmeta">设计 / 视觉 · 21 个函数</div>
+    <div class="cdesc">零依赖 PNG 编解码：信息统计、缩放裁剪旋转、色彩调整、模糊锐化边缘、图像比较与字符画</div>
+  </a>
+  <a class="card" href="tools/finance_tool.html">
+    <div class="cname">finance_tool</div>
+    <div class="cmeta">金融 / 财务 · 18 个函数</div>
+    <div class="cdesc">单利复利、现值终值、NPV/IRR、等额本息摊销、ROI/CAGR、盈亏平衡与折旧（利率统一用小数，0.05=5%）</div>
+  </a>
+</div>
+<h2 id="flow" class="anchor"><a href="#flow">四步调用一个函数</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>步骤</th><th>命令</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>ai-tools index</code></td><td>找到需要的工具（<code>--json</code> 给程序读）</td></tr>
+<tr><td>2</td><td><code>xxx_tool list</code></td><td>找到需要的函数</td></tr>
+<tr><td>3</td><td><code>xxx_tool help &lt;fn&gt;</code></td><td>读 input/output 契约与示例</td></tr>
+<tr><td>4</td><td><code>xxx_tool &lt;fn&gt; -i input.desc -o output.desc</code></td><td>调用；退出码 0 再读输出</td></tr>
+</tbody></table></div>
+<h2 id="why" class="anchor"><a href="#why">为什么这样设计</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>取舍</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td><b>调用方式唯一</b></td><td>永远是 <code>工具 函数 -i -o</code>，AI 不需要为每个库学一套 CLI</td></tr>
+<tr><td><b>输入输出唯一</b></td><td>数据只走 <code>.desc</code> 文件，内容是极简裸数据——没有 JSON 信封、没有 key、没有类型标记</td></tr>
+<tr><td><b>空格 ≡ 换行</b></td><td><code>1 2</code> 和 <code>1\n2</code> 完全等价，AI 不必纠结排版</td></tr>
+<tr><td><b>契约可自发现</b></td><td>每个工具自带 <code>list</code> / <code>help</code> / <code>schema</code> / <code>selftest</code>，不用查外部文档</td></tr>
+<tr><td><b>退出码统一</b></td><td>0/1/2/3/4 五个码，跨全部工具同义</td></tr>
+<tr><td><b>示例即测试</b></td><td>函数内嵌的 <code>examples</code> 同时是文档、few-shot 样本和回归用例</td></tr>
+</tbody></table></div>
+<h2 id="exit" class="anchor"><a href="#exit">退出码</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>码</th><th>名称</th><th>含义</th><th>AI 该如何反应</th></tr></thead>
+<tbody>
+<tr><td><span class="code-pill ok">0</span></td><td>OK</td><td>成功</td><td>读 <code>output.desc</code></td></tr>
+<tr><td><span class="code-pill warn">1</span></td><td>USAGE</td><td>用法错误（未知选项、缺必填项）</td><td>用 <code>help &lt;fn&gt;</code> 修正命令</td></tr>
+<tr><td><span class="code-pill warn">2</span></td><td>INPUT</td><td>输入错误（文件缺失、无法解析、数量不符）</td><td>重写 <code>input.desc</code></td></tr>
+<tr><td><span class="code-pill err">3</span></td><td>RUNTIME</td><td>运行时错误（算法失败、IO 失败）</td><td>换参数或换工具</td></tr>
+<tr><td><span class="code-pill err">4</span></td><td>UNKNOWN</td><td>未知函数</td><td>用 <code>list</code> 查正确函数名</td></tr>
+</tbody></table></div>
+<blockquote><p><b>重要</b>：退出码非 0 时 <code>output.desc</code> 不会被更新（可能是上一次的残留）。<b>先看退出码，再读文件。</b></p></blockquote>
+<h2 id="meta" class="anchor"><a href="#meta">元函数（每个工具都有）</a></h2>
+<div class="table-wrap"><table>
+<thead><tr><th>函数</th><th>作用</th></tr></thead>
+<tbody>
+<tr><td><code>list</code></td><td>列出全部函数</td></tr>
+<tr><td><code>help &lt;fn&gt;</code></td><td>打印某函数的输入输出契约与示例</td></tr>
+<tr><td><code>schema [fn]</code></td><td>输出 JSON 机器契约，交给 Agent 自动消费</td></tr>
+<tr><td><code>selftest</code></td><td>跑内置示例并校验输出</td></tr>
+<tr><td><code>version</code></td><td>版本号</td></tr>
+</tbody></table></div>
+<p>元函数名是<b>保留字</b>，优先级高于同名业务函数，保证任何情况下都能自发现。（因此 <code>file_tool</code> 的列目录函数叫 <code>ls</code> 而不是 <code>list</code>。）</p>
+<h2 id="layout" class="anchor"><a href="#layout">目录结构</a></h2>
+<pre class="code" data-lang="text"><code>ai-tools/
+├── bin/                     13 个可执行入口（12 工具 + ai-tools 聚合器）
+├── lib/
+│   ├── cli.js               统一 CLI 引擎：参数解析、元函数、退出码、原子写入
+│   ├── desc.js              DESC/1.0 读取器（三层视图）
+│   ├── errors.js            统一错误与退出码
+│   ├── num.js               数值工具（格式化、分位数、牛顿法求根…）
+│   ├── table.js             零依赖对齐表格（含 CJK 宽度）
+│   └── png.js               零依赖 PNG 编解码
+├── tools/&lt;name&gt;_tool/       12 个工具，每个导出 { name, functions }
+├── scripts/                 索引/文档生成器与自检脚本
+├── test/                    node:test 单元测试
+└── doc/                     本说明书（由 npm run doc 生成）</code></pre>
+<h2 id="dev" class="anchor"><a href="#dev">开发</a></h2>
+<pre class="code" data-lang="bash"><code>npm test           # node --test，单元测试
+npm run selftest   # 跑全部工具的内置示例
+npm run smoke      # 端到端冒烟
+npm run index      # 重新生成 INDEX.md / MANIFEST.json
+npm run doc        # 重新生成 doc/ 说明书</code></pre>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

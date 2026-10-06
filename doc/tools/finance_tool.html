@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>finance_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link on" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">finance_tool</a></h1>
+<p class="lead">金融计算工具 — 单利复利、现值终值、NPV/IRR、等额本息摊销、ROI/CAGR、盈亏平衡与折旧（利率统一用小数，0.05=5%）</p>
+<div class="chips">
+  <span class="chip">金融 / 财务</span>
+  <span class="chip"><b>18</b> 个函数</span>
+  <span class="chip">用法 <code>finance_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>finance_tool list            # 列出全部函数
+finance_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+finance_tool schema &lt;fn&gt;    # JSON 机器契约
+finance_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#simple_interest">利息 · simple_interest</a>
+<a href="#compound_interest">利息 · compound_interest</a>
+<a href="#continuous_interest">利息 · continuous_interest</a>
+<a href="#ear">利息 · ear</a>
+<a href="#rule_of_72">利息 · rule_of_72</a>
+<a href="#fv">现值终值 · fv</a>
+<a href="#pv">现值终值 · pv</a>
+<a href="#npv">现值终值 · npv</a>
+<a href="#irr">现值终值 · irr</a>
+<a href="#pmt">贷款 · pmt</a>
+<a href="#amortization">贷款 · amortization</a>
+<a href="#total_interest">贷款 · total_interest</a>
+<a href="#roi">投资 · roi</a>
+<a href="#cagr">投资 · cagr</a>
+<a href="#margin">投资 · margin</a>
+<a href="#breakeven">投资 · breakeven</a>
+<a href="#payback">投资 · payback</a>
+<a href="#depreciation">投资 · depreciation</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 finance_tool 的 18 个函数中搜索…">
+<p class="count" data-count>共 18 个函数</p>
+<div data-group>
+<h2 id="g-%E5%88%A9%E6%81%AF" class="anchor"><a href="#g-%E5%88%A9%E6%81%AF">利息（5）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="simple_interest" data-fn="finance_tool simple_interest 利息 单利利息：本金 × 利率 × 年数">
+  <div class="fn-head">
+    <span class="fn-name">simple_interest</span>
+    <span class="fn-sum">单利利息：本金 × 利率 × 年数</span>
+    <span class="tag">利息</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool simple_interest -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10000 0.05 3</div>
+      <div class="hint">本金 年利率(0.05=5%) 年数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1500</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10000 0.05 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1500</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="compound_interest" data-fn="finance_tool compound_interest 利息 复利终值 A = P(1 + r/n)^(nt)">
+  <div class="fn-head">
+    <span class="fn-name">compound_interest</span>
+    <span class="fn-sum">复利终值 A = P(1 + r/n)^(nt)</span>
+    <span class="tag">利息</span>
+    <span class="tag">4 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool compound_interest -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10000 0.05 1 3</div>
+      <div class="hint">本金 年利率 每年复利次数 年数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">11576.25</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10000 0.05 1 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">11576.25</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="continuous_interest" data-fn="finance_tool continuous_interest 利息 连续复利终值 A = P·e^(rt)">
+  <div class="fn-head">
+    <span class="fn-name">continuous_interest</span>
+    <span class="fn-sum">连续复利终值 A = P·e^(rt)</span>
+    <span class="tag">利息</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool continuous_interest -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10000 0.05 3</div>
+      <div class="hint">本金 年利率 年数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">11618.342422</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10000 0.05 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">11618.342422</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="ear" data-fn="finance_tool ear 利息 有效年利率 EAR = (1 + r/n)^n - 1">
+  <div class="fn-head">
+    <span class="fn-name">ear</span>
+    <span class="fn-sum">有效年利率 EAR = (1 + r/n)^n - 1</span>
+    <span class="tag">利息</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool ear -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0.12 12</div>
+      <div class="hint">名义年利率 每年复利次数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.126825030132</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0.12 12</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.126825030132</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="rule_of_72" data-fn="finance_tool rule_of_72 利息 本金翻倍的估算年数 72 / (利率×100)">
+  <div class="fn-head">
+    <span class="fn-name">rule_of_72</span>
+    <span class="fn-sum">本金翻倍的估算年数 72 / (利率×100)</span>
+    <span class="tag">利息</span>
+    <span class="tag">1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool rule_of_72 -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0.06</div>
+      <div class="hint">年利率（小数）</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">12</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0.06</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">12</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E7%8E%B0%E5%80%BC%E7%BB%88%E5%80%BC" class="anchor"><a href="#g-%E7%8E%B0%E5%80%BC%E7%BB%88%E5%80%BC">现值终值（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="fv" data-fn="finance_tool fv 现值终值 复利终值 FV = PV(1 + r)^n">
+  <div class="fn-head">
+    <span class="fn-name">fv</span>
+    <span class="fn-sum">复利终值 FV = PV(1 + r)^n</span>
+    <span class="tag">现值终值</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool fv -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1000 0.05 10</div>
+      <div class="hint">现值 每期利率 期数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1628.894627</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1000 0.05 10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1628.894627</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="pv" data-fn="finance_tool pv 现值终值 现值 PV = FV / (1 + r)^n">
+  <div class="fn-head">
+    <span class="fn-name">pv</span>
+    <span class="fn-sum">现值 PV = FV / (1 + r)^n</span>
+    <span class="tag">现值终值</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool pv -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1628.894627 0.05 10</div>
+      <div class="hint">终值 每期利率 期数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1000</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1628.894627 0.05 10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1000</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="npv" data-fn="finance_tool npv 现值终值 净现值：第 1 个值为贴现率，其余为各期现金流">
+  <div class="fn-head">
+    <span class="fn-name">npv</span>
+    <span class="fn-sum">净现值：第 1 个值为贴现率，其余为各期现金流</span>
+    <span class="tag">现值终值</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool npv -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0.1 -1000 300 400 500</div>
+      <div class="hint">贴现率 现金流1 现金流2 ...（支出为负）</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">-21.0368144252</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0.1 -1000 300 400 500</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">-21.0368144252</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="irr" data-fn="finance_tool irr 现值终值 内部收益率（使 NPV=0 的贴现率）">
+  <div class="fn-head">
+    <span class="fn-name">irr</span>
+    <span class="fn-sum">内部收益率（使 NPV=0 的贴现率）</span>
+    <span class="tag">现值终值</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool irr -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">-1000 300 400 500</div>
+      <div class="hint">各期现金流，首期通常为负（支出）</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.0889633946933</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">-1000 300 400 500</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.0889633946933</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%B4%B7%E6%AC%BE" class="anchor"><a href="#g-%E8%B4%B7%E6%AC%BE">贷款（3）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="pmt" data-fn="finance_tool pmt 贷款 等额还款每期金额 PMT = P·i / (1 - (1+i)^-n)">
+  <div class="fn-head">
+    <span class="fn-name">pmt</span>
+    <span class="fn-sum">等额还款每期金额 PMT = P·i / (1 - (1+i)^-n)</span>
+    <span class="tag">贷款</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool pmt -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">100000 0.005 120</div>
+      <div class="hint">本金 每期利率 期数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1110.20501942</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">100000 0.005 120</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1110.20501942</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="amortization" data-fn="finance_tool amortization 贷款 等额本息摊销表，每行 &quot;期次 利息 本金 剩余余额&quot;">
+  <div class="fn-head">
+    <span class="fn-name">amortization</span>
+    <span class="fn-sum">等额本息摊销表，每行 &quot;期次 利息 本金 剩余余额&quot;</span>
+    <span class="tag">贷款</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool amortization -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1000 0.1 3</div>
+      <div class="hint">本金 每期利率 期数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1 100 302.114804 697.885196
+2 69.78852 332.326284 365.558912
+3 36.555891 365.558912 0</div>
+      <div class="hint">布局：rows</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1000 0.1 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1 100 302.114804 697.885196
+2 69.78852 332.326284 365.558912
+3 36.555891 365.558912 0</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="total_interest" data-fn="finance_tool total_interest 贷款 等额本息总利息">
+  <div class="fn-head">
+    <span class="fn-name">total_interest</span>
+    <span class="fn-sum">等额本息总利息</span>
+    <span class="tag">贷款</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool total_interest -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1000 0.1 3</div>
+      <div class="hint">本金 每期利率 期数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">206.344410876</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1000 0.1 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">206.344410876</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%8A%95%E8%B5%84" class="anchor"><a href="#g-%E6%8A%95%E8%B5%84">投资（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="roi" data-fn="finance_tool roi 投资 投资回报率 (收益 - 成本) / 成本">
+  <div class="fn-head">
+    <span class="fn-name">roi</span>
+    <span class="fn-sum">投资回报率 (收益 - 成本) / 成本</span>
+    <span class="tag">投资</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool roi -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1200 1000</div>
+      <div class="hint">收益 成本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.2</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1200 1000</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="cagr" data-fn="finance_tool cagr 投资 复合年增长率 (末值/初值)^(1/年数) - 1">
+  <div class="fn-head">
+    <span class="fn-name">cagr</span>
+    <span class="fn-sum">复合年增长率 (末值/初值)^(1/年数) - 1</span>
+    <span class="tag">投资</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool cagr -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1000 2000 5</div>
+      <div class="hint">期初值 期末值 年数</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.148698355</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1000 2000 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.148698355</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="margin" data-fn="finance_tool margin 投资 毛利率 (收入 - 成本) / 收入">
+  <div class="fn-head">
+    <span class="fn-name">margin</span>
+    <span class="fn-sum">毛利率 (收入 - 成本) / 收入</span>
+    <span class="tag">投资</span>
+    <span class="tag">2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool margin -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">200 150</div>
+      <div class="hint">收入 成本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.25</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">200 150</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.25</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="breakeven" data-fn="finance_tool breakeven 投资 盈亏平衡销量 = 固定成本 / (单价 - 单位变动成本)">
+  <div class="fn-head">
+    <span class="fn-name">breakeven</span>
+    <span class="fn-sum">盈亏平衡销量 = 固定成本 / (单价 - 单位变动成本)</span>
+    <span class="tag">投资</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool breakeven -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10000 50 30</div>
+      <div class="hint">固定成本 单价 单位变动成本</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">500</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10000 50 30</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">500</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="payback" data-fn="finance_tool payback 投资 静态回收期（年）：第 1 个值为初始投资(正数)，其余为各年净现金流">
+  <div class="fn-head">
+    <span class="fn-name">payback</span>
+    <span class="fn-sum">静态回收期（年）：第 1 个值为初始投资(正数)，其余为各年净现金流</span>
+    <span class="tag">投资</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool payback -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">300 100 150 200</div>
+      <div class="hint">初始投资(正数) 第1年现金流 第2年现金流 ...</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2.25</div>
+      <div class="hint">布局：number</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">300 100 150 200</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2.25</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="depreciation" data-fn="finance_tool depreciation 投资 折旧：--method sl(直线)|ddb(双倍余额递减)|sy(年数总和)">
+  <div class="fn-head">
+    <span class="fn-name">depreciation</span>
+    <span class="fn-sum">折旧：--method sl(直线)|ddb(双倍余额递减)|sy(年数总和)</span>
+    <span class="tag">投资</span>
+    <span class="tag">3 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>finance_tool depreciation -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10000 1000 5</div>
+      <div class="hint">原值 残值 年限</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1800
+1800
+1800
+1800
+1800</div>
+      <div class="hint">每行一年的折旧额</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--method</code></td><td><code>VAL</code></td><td><code>sl</code></td><td>sl|ddb|sy</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10000 1000 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1800
+1800
+1800
+1800
+1800</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="image_tool.html">image_tool</a></span>
+<span></span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

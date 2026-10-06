@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>statistics_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link on" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">statistics_tool</a></h1>
+<p class="lead">统计工具 — 描述统计、离散程度、数据变换、双序列相关与回归</p>
+<div class="chips">
+  <span class="chip">通用 / 数据</span>
+  <span class="chip"><b>27</b> 个函数</span>
+  <span class="chip">用法 <code>statistics_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>statistics_tool list            # 列出全部函数
+statistics_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+statistics_tool schema &lt;fn&gt;    # JSON 机器契约
+statistics_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#count">描述统计 · count</a>
+<a href="#sum">描述统计 · sum</a>
+<a href="#mean">描述统计 · mean</a>
+<a href="#median">描述统计 · median</a>
+<a href="#mode">描述统计 · mode</a>
+<a href="#geometric_mean">描述统计 · geometric_mean</a>
+<a href="#harmonic_mean">描述统计 · harmonic_mean</a>
+<a href="#range">离散程度 · range</a>
+<a href="#variance">离散程度 · variance</a>
+<a href="#stdev">离散程度 · stdev</a>
+<a href="#cv">离散程度 · cv</a>
+<a href="#mad">离散程度 · mad</a>
+<a href="#iqr">离散程度 · iqr</a>
+<a href="#quantile">离散程度 · quantile</a>
+<a href="#percentile">离散程度 · percentile</a>
+<a href="#outliers">离散程度 · outliers</a>
+<a href="#zscore">变换 · zscore</a>
+<a href="#normalize">变换 · normalize</a>
+<a href="#cumsum">变换 · cumsum</a>
+<a href="#diff">变换 · diff</a>
+<a href="#moving_average">变换 · moving_average</a>
+<a href="#sort">变换 · sort</a>
+<a href="#histogram">变换 · histogram</a>
+<a href="#covariance">双序列 · covariance</a>
+<a href="#correlation">双序列 · correlation</a>
+<a href="#spearman">双序列 · spearman</a>
+<a href="#linear_regression">双序列 · linear_regression</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 statistics_tool 的 27 个函数中搜索…">
+<p class="count" data-count>共 27 个函数</p>
+<div data-group>
+<h2 id="g-%E6%8F%8F%E8%BF%B0%E7%BB%9F%E8%AE%A1" class="anchor"><a href="#g-%E6%8F%8F%E8%BF%B0%E7%BB%9F%E8%AE%A1">描述统计（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="count" data-fn="statistics_tool count 描述统计 样本个数">
+  <div class="fn-head">
+    <span class="fn-name">count</span>
+    <span class="fn-sum">样本个数</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool count -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sum" data-fn="statistics_tool sum 描述统计 求和">
+  <div class="fn-head">
+    <span class="fn-name">sum</span>
+    <span class="fn-sum">求和</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool sum -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">10</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">10</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="mean" data-fn="statistics_tool mean 描述统计 算术平均">
+  <div class="fn-head">
+    <span class="fn-name">mean</span>
+    <span class="fn-sum">算术平均</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool mean -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 5</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="median" data-fn="statistics_tool median 描述统计 中位数">
+  <div class="fn-head">
+    <span class="fn-name">median</span>
+    <span class="fn-sum">中位数</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool median -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">3 1 2</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">3 1 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="mode" data-fn="statistics_tool mode 描述统计 众数（多个则全部输出）">
+  <div class="fn-head">
+    <span class="fn-name">mode</span>
+    <span class="fn-sum">众数（多个则全部输出）</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool mode -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 2 3 3 3</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 2 3 3 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="geometric_mean" data-fn="statistics_tool geometric_mean 描述统计 几何平均">
+  <div class="fn-head">
+    <span class="fn-name">geometric_mean</span>
+    <span class="fn-sum">几何平均</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool geometric_mean -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2 8</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">4</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2 8</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="harmonic_mean" data-fn="statistics_tool harmonic_mean 描述统计 调和平均">
+  <div class="fn-head">
+    <span class="fn-name">harmonic_mean</span>
+    <span class="fn-sum">调和平均</span>
+    <span class="tag">描述统计</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool harmonic_mean -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 4</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1.71428571429</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1.71428571429</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E7%A6%BB%E6%95%A3%E7%A8%8B%E5%BA%A6" class="anchor"><a href="#g-%E7%A6%BB%E6%95%A3%E7%A8%8B%E5%BA%A6">离散程度（9）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="range" data-fn="statistics_tool range 离散程度 极差 (max - min)">
+  <div class="fn-head">
+    <span class="fn-name">range</span>
+    <span class="fn-sum">极差 (max - min)</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool range -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 5 9</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">8</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 5 9</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">8</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="variance" data-fn="statistics_tool variance 离散程度 方差，--ddof 1 为样本方差">
+  <div class="fn-head">
+    <span class="fn-name">variance</span>
+    <span class="fn-sum">方差，--ddof 1 为样本方差</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool variance -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2 4 4 4 5 5 7 9</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">4</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --ddof</code></td><td><code>VAL</code></td><td><code>0</code></td><td>自由度修正：0=总体，1=样本</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2 4 4 4 5 5 7 9</span><span class="k">  --ddof 0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="stdev" data-fn="statistics_tool stdev 离散程度 标准差，--ddof 1 为样本标准差">
+  <div class="fn-head">
+    <span class="fn-name">stdev</span>
+    <span class="fn-sum">标准差，--ddof 1 为样本标准差</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool stdev -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2 4 4 4 5 5 7 9</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-d, --ddof</code></td><td><code>VAL</code></td><td><code>0</code></td><td>自由度修正：0=总体，1=样本</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2 4 4 4 5 5 7 9</span><span class="k">  --ddof 0</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="cv" data-fn="statistics_tool cv 离散程度 变异系数 stdev/mean">
+  <div class="fn-head">
+    <span class="fn-name">cv</span>
+    <span class="fn-sum">变异系数 stdev/mean</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool cv -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">2 4 6</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.408248290464</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">2 4 6</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.408248290464</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="mad" data-fn="statistics_tool mad 离散程度 平均绝对偏差">
+  <div class="fn-head">
+    <span class="fn-name">mad</span>
+    <span class="fn-sum">平均绝对偏差</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool mad -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="iqr" data-fn="statistics_tool iqr 离散程度 四分位距 Q3 - Q1">
+  <div class="fn-head">
+    <span class="fn-name">iqr</span>
+    <span class="fn-sum">四分位距 Q3 - Q1</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool iqr -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 5 6 7 8</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3.5</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 5 6 7 8</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3.5</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="quantile" data-fn="statistics_tool quantile 离散程度 分位数，--q 指定概率 (0~1)">
+  <div class="fn-head">
+    <span class="fn-name">quantile</span>
+    <span class="fn-sum">分位数，--q 指定概率 (0~1)</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool quantile -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 5</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-q, --q</code></td><td><code>VAL</code></td><td><code>0.5</code></td><td>概率，0~1</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 5</span><span class="k">  --q 0.5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="percentile" data-fn="statistics_tool percentile 离散程度 百分位数，--p 指定百分位 (0~100)">
+  <div class="fn-head">
+    <span class="fn-name">percentile</span>
+    <span class="fn-sum">百分位数，--p 指定百分位 (0~100)</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool percentile -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 5</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">4</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-p, --p</code></td><td><code>VAL</code></td><td><code>50</code></td><td>百分位，0~100</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 5</span><span class="k">  --p 75</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="outliers" data-fn="statistics_tool outliers 离散程度 IQR 法离群点（1.5×IQR 之外）">
+  <div class="fn-head">
+    <span class="fn-name">outliers</span>
+    <span class="fn-sum">IQR 法离群点（1.5×IQR 之外）</span>
+    <span class="tag">离散程度</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool outliers -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 100</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">100</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 100</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">100</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%8F%98%E6%8D%A2" class="anchor"><a href="#g-%E5%8F%98%E6%8D%A2">变换（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="zscore" data-fn="statistics_tool zscore 变换 标准化 z = (x - mean) / stdev">
+  <div class="fn-head">
+    <span class="fn-name">zscore</span>
+    <span class="fn-sum">标准化 z = (x - mean) / stdev</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool zscore -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">-1.22474487139 0 1.22474487139</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">-1.22474487139 0 1.22474487139</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="normalize" data-fn="statistics_tool normalize 变换 Min-Max 归一化到 [0,1]">
+  <div class="fn-head">
+    <span class="fn-name">normalize</span>
+    <span class="fn-sum">Min-Max 归一化到 [0,1]</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool normalize -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">0 5 10</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0 0.5 1</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">0 5 10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0 0.5 1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="cumsum" data-fn="statistics_tool cumsum 变换 累计和">
+  <div class="fn-head">
+    <span class="fn-name">cumsum</span>
+    <span class="fn-sum">累计和</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool cumsum -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1 3 6</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1 3 6</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="diff" data-fn="statistics_tool diff 变换 一阶差分（后项减前项）">
+  <div class="fn-head">
+    <span class="fn-name">diff</span>
+    <span class="fn-sum">一阶差分（后项减前项）</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool diff -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 3 6 10</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2 3 4</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 3 6 10</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2 3 4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="moving_average" data-fn="statistics_tool moving_average 变换 滑动平均，--window 窗口大小">
+  <div class="fn-head">
+    <span class="fn-name">moving_average</span>
+    <span class="fn-sum">滑动平均，--window 窗口大小</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool moving_average -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 5</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">2 3 4</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-w, --window</code></td><td><code>VAL</code></td><td><code>3</code></td><td>窗口大小</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">2 3 4</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="sort" data-fn="statistics_tool sort 变换 排序，--desc 降序">
+  <div class="fn-head">
+    <span class="fn-name">sort</span>
+    <span class="fn-sum">排序，--desc 降序</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool sort -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">3 1 2</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1 2 3</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--desc</code></td><td></td><td></td><td>降序</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">3 1 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1 2 3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="histogram" data-fn="statistics_tool histogram 变换 直方图，--bins 指定桶数，输出每行 &quot;下界 上界 计数&quot;">
+  <div class="fn-head">
+    <span class="fn-name">histogram</span>
+    <span class="fn-sum">直方图，--bins 指定桶数，输出每行 &quot;下界 上界 计数&quot;</span>
+    <span class="tag">变换</span>
+    <span class="tag">≥1 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool histogram -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3 4 5</div>
+      <div class="hint">一串数字，空白或换行分隔</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1 1.4 1
+1.4 1.8 0
+1.8 2.2 1
+2.2 2.6 0
+2.6 3 0
+3 3.4 1
+3.4 3.8 0
+3.8 4.2 1
+4.2 4.6 0
+4.6 5 1</div>
+      <div class="hint">统计量</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-b, --bins</code></td><td><code>VAL</code></td><td><code>10</code></td><td>桶数</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3 4 5</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1 1.4 1
+1.4 1.8 0
+1.8 2.2 1
+2.2 2.6 0
+2.6 3 0
+3 3.4 1
+3.4 3.8 0
+3.8 4.2 1
+4.2 4.6 0
+4.6 5 1</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%8F%8C%E5%BA%8F%E5%88%97" class="anchor"><a href="#g-%E5%8F%8C%E5%BA%8F%E5%88%97">双序列（4）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="covariance" data-fn="statistics_tool covariance 双序列 协方差">
+  <div class="fn-head">
+    <span class="fn-name">covariance</span>
+    <span class="fn-sum">协方差</span>
+    <span class="tag">双序列</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool covariance -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3
+2 4 6</div>
+      <div class="hint">第 1 行 X 序列，第 2 行 Y 序列</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1.33333333333</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3
+2 4 6</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1.33333333333</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="correlation" data-fn="statistics_tool correlation 双序列 皮尔逊相关系数">
+  <div class="fn-head">
+    <span class="fn-name">correlation</span>
+    <span class="fn-sum">皮尔逊相关系数</span>
+    <span class="tag">双序列</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool correlation -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3
+2 4 6</div>
+      <div class="hint">第 1 行 X 序列，第 2 行 Y 序列</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3
+2 4 6</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="spearman" data-fn="statistics_tool spearman 双序列 斯皮尔曼秩相关系数">
+  <div class="fn-head">
+    <span class="fn-name">spearman</span>
+    <span class="fn-sum">斯皮尔曼秩相关系数</span>
+    <span class="tag">双序列</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool spearman -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3
+2 4 6</div>
+      <div class="hint">第 1 行 X 序列，第 2 行 Y 序列</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1</div>
+      <div class="hint">布局：values</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3
+2 4 6</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="linear_regression" data-fn="statistics_tool linear_regression 双序列 一元线性回归 y = a + b·x，输出 &quot;a b r2&quot;">
+  <div class="fn-head">
+    <span class="fn-name">linear_regression</span>
+    <span class="fn-sum">一元线性回归 y = a + b·x，输出 &quot;a b r2&quot;</span>
+    <span class="tag">双序列</span>
+    <span class="tag">≥2 个输入值</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>statistics_tool linear_regression -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">1 2 3
+2 4 6</div>
+      <div class="hint">第 1 行 X 序列，第 2 行 Y 序列</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0 2 1</div>
+      <div class="hint">截距 斜率 决定系数R²</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">1 2 3
+2 4 6</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0 2 1</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="basic_math_tool.html">basic_math_tool</a></span>
+<span><a href="text_tool.html">text_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>

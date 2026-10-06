@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>text_tool — ai-tools 文档</title>
+<meta name="description" content="ai-tools：面向 AI 的统一范式命令行工具集，12 个工具 / 276 个函数，零第三方依赖。">
+<link rel="stylesheet" href="../assets/doc.css">
+<script>(function(){var k='ai-tools-doc-theme',v=null;try{v=localStorage.getItem(k)}catch(e){}if(!v){v=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',v)})()</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="mark">A</span>ai-tools <small>12 工具 / 276 函数</small></a>
+  <nav class="topnav">
+    <a href="../index.html">总览</a>
+    <a href="../spec.html">DESC/1.0 规范</a>
+    <a href="../functions.html">全部函数</a>
+    <a href="../contributing.html">贡献指南</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" type="button" data-theme-toggle title="切换主题">☾</button>
+  <a class="icon-btn" href="https://github.com/hupingin/ai-tools" title="GitHub" target="_blank" rel="noopener">↗</a>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-group"><p class="side-title">开始</p>
+<a class="side-link" href="../index.html">总览</a>
+<a class="side-link" href="../spec.html">DESC/1.0 规范</a>
+<a class="side-link" href="../functions.html">全部函数</a>
+<a class="side-link" href="../contributing.html">贡献指南</a>
+</div>
+<div class="side-group"><p class="side-title">工具（12）</p>
+<a class="side-link" href="../tools/basic_math_tool.html"><span>basic_math_tool</span><span class="n">40</span></a>
+<a class="side-link" href="../tools/statistics_tool.html"><span>statistics_tool</span><span class="n">27</span></a>
+<a class="side-link on" href="../tools/text_tool.html"><span>text_tool</span><span class="n">44</span></a>
+<a class="side-link" href="../tools/json_tool.html"><span>json_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/csv_tool.html"><span>csv_tool</span><span class="n">16</span></a>
+<a class="side-link" href="../tools/datetime_tool.html"><span>datetime_tool</span><span class="n">20</span></a>
+<a class="side-link" href="../tools/file_tool.html"><span>file_tool</span><span class="n">19</span></a>
+<a class="side-link" href="../tools/crypto_tool.html"><span>crypto_tool</span><span class="n">24</span></a>
+<a class="side-link" href="../tools/unit_tool.html"><span>unit_tool</span><span class="n">6</span></a>
+<a class="side-link" href="../tools/color_tool.html"><span>color_tool</span><span class="n">22</span></a>
+<a class="side-link" href="../tools/image_tool.html"><span>image_tool</span><span class="n">21</span></a>
+<a class="side-link" href="../tools/finance_tool.html"><span>finance_tool</span><span class="n">18</span></a>
+</div>
+</aside>
+  <main class="content">
+<h1 id="top" class="anchor"><a href="#top">text_tool</a></h1>
+<p class="lead">文本处理工具 — 统计、大小写、命名风格、清洗、查找替换、行操作、相似度</p>
+<div class="chips">
+  <span class="chip">通用 / 文本</span>
+  <span class="chip"><b>44</b> 个函数</span>
+  <span class="chip">用法 <code>text_tool &lt;function&gt; -i input.desc -o output.desc</code></span>
+</div>
+<pre class="code" data-lang="bash"><code>text_tool list            # 列出全部函数
+text_tool help &lt;fn&gt;      # 看某个函数的输入输出契约
+text_tool schema &lt;fn&gt;    # JSON 机器契约
+text_tool selftest       # 跑内置示例</code></pre>
+<div class="page-toc"><div class="t">本页函数</div>
+<a href="#stats">统计 · stats</a>
+<a href="#count_chars">统计 · count_chars</a>
+<a href="#count_words">统计 · count_words</a>
+<a href="#count_lines">统计 · count_lines</a>
+<a href="#word_freq">统计 · word_freq</a>
+<a href="#char_freq">统计 · char_freq</a>
+<a href="#upper">大小写 · upper</a>
+<a href="#lower">大小写 · lower</a>
+<a href="#title">大小写 · title</a>
+<a href="#capitalize">大小写 · capitalize</a>
+<a href="#swapcase">大小写 · swapcase</a>
+<a href="#snake_case">命名风格 · snake_case</a>
+<a href="#kebab_case">命名风格 · kebab_case</a>
+<a href="#camel_case">命名风格 · camel_case</a>
+<a href="#pascal_case">命名风格 · pascal_case</a>
+<a href="#slugify">命名风格 · slugify</a>
+<a href="#trim">清洗 · trim</a>
+<a href="#trim_start">清洗 · trim_start</a>
+<a href="#trim_end">清洗 · trim_end</a>
+<a href="#strip_empty">清洗 · strip_empty</a>
+<a href="#dedent">清洗 · dedent</a>
+<a href="#indent">清洗 · indent</a>
+<a href="#squeeze_blank">清洗 · squeeze_blank</a>
+<a href="#reverse">变换 · reverse</a>
+<a href="#reverse_lines">变换 · reverse_lines</a>
+<a href="#repeat">变换 · repeat</a>
+<a href="#pad_start">变换 · pad_start</a>
+<a href="#pad_end">变换 · pad_end</a>
+<a href="#truncate">变换 · truncate</a>
+<a href="#wrap">变换 · wrap</a>
+<a href="#replace">查找替换 · replace</a>
+<a href="#contains">查找替换 · contains</a>
+<a href="#starts_with">查找替换 · starts_with</a>
+<a href="#ends_with">查找替换 · ends_with</a>
+<a href="#extract">查找替换 · extract</a>
+<a href="#substring">查找替换 · substring</a>
+<a href="#sort_lines">行操作 · sort_lines</a>
+<a href="#uniq">行操作 · uniq</a>
+<a href="#join">行操作 · join</a>
+<a href="#split">行操作 · split</a>
+<a href="#head">行操作 · head</a>
+<a href="#tail">行操作 · tail</a>
+<a href="#levenshtein">相似度 · levenshtein</a>
+<a href="#similarity">相似度 · similarity</a>
+</div>
+<input class="search" type="search" data-search placeholder="在 text_tool 的 44 个函数中搜索…">
+<p class="count" data-count>共 44 个函数</p>
+<div data-group>
+<h2 id="g-%E7%BB%9F%E8%AE%A1" class="anchor"><a href="#g-%E7%BB%9F%E8%AE%A1">统计（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="stats" data-fn="text_tool stats 统计 输出字符/词/行/字节统计">
+  <div class="fn-head">
+    <span class="fn-name">stats</span>
+    <span class="fn-sum">输出字符/词/行/字节统计</span>
+    <span class="tag">统计</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool stats -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">chars 11
+chars_no_spaces 10
+words 2
+lines 1
+bytes 11</div>
+      <div class="hint">每行一项：键 值</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">chars 11
+chars_no_spaces 10
+words 2
+lines 1
+bytes 11</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="count_chars" data-fn="text_tool count_chars 统计 字符数，--no-spaces 忽略空白">
+  <div class="fn-head">
+    <span class="fn-name">count_chars</span>
+    <span class="fn-sum">字符数，--no-spaces 忽略空白</span>
+    <span class="tag">统计</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool count_chars -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">11</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--no-spaces</code></td><td></td><td></td><td>不计空白字符</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">11</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="count_words" data-fn="text_tool count_words 统计 词数（按空白分词；中文请用 count_chars）">
+  <div class="fn-head">
+    <span class="fn-name">count_words</span>
+    <span class="fn-sum">词数（按空白分词；中文请用 count_chars）</span>
+    <span class="tag">统计</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool count_words -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello brave world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello brave world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="count_lines" data-fn="text_tool count_lines 统计 行数">
+  <div class="fn-head">
+    <span class="fn-name">count_lines</span>
+    <span class="fn-sum">行数</span>
+    <span class="tag">统计</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool count_lines -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b
+c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b
+c</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="word_freq" data-fn="text_tool word_freq 统计 词频 Top N，输出每行 &quot;词 次数&quot;">
+  <div class="fn-head">
+    <span class="fn-name">word_freq</span>
+    <span class="fn-sum">词频 Top N，输出每行 &quot;词 次数&quot;</span>
+    <span class="tag">统计</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool word_freq -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a b a c b a</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a 3
+b 2
+c 1</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --top</code></td><td><code>VAL</code></td><td><code>10</code></td><td>取前 N 个</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a b a c b a</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a 3
+b 2
+c 1</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="char_freq" data-fn="text_tool char_freq 统计 字符频次 Top N，输出每行 &quot;字符 次数&quot;">
+  <div class="fn-head">
+    <span class="fn-name">char_freq</span>
+    <span class="fn-sum">字符频次 Top N，输出每行 &quot;字符 次数&quot;</span>
+    <span class="tag">统计</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool char_freq -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">aab</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a 2
+b 1</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --top</code></td><td><code>VAL</code></td><td><code>10</code></td><td>取前 N 个</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">aab</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a 2
+b 1</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%A4%A7%E5%B0%8F%E5%86%99" class="anchor"><a href="#g-%E5%A4%A7%E5%B0%8F%E5%86%99">大小写（5）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="upper" data-fn="text_tool upper 大小写 转大写">
+  <div class="fn-head">
+    <span class="fn-name">upper</span>
+    <span class="fn-sum">转大写</span>
+    <span class="tag">大小写</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool upper -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">HELLO</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">HELLO</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="lower" data-fn="text_tool lower 大小写 转小写">
+  <div class="fn-head">
+    <span class="fn-name">lower</span>
+    <span class="fn-sum">转小写</span>
+    <span class="tag">大小写</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool lower -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">HELLO</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hello</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">HELLO</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hello</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="title" data-fn="text_tool title 大小写 每个词首字母大写">
+  <div class="fn-head">
+    <span class="fn-name">title</span>
+    <span class="fn-sum">每个词首字母大写</span>
+    <span class="tag">大小写</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool title -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">Hello World</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">Hello World</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="capitalize" data-fn="text_tool capitalize 大小写 首字母大写，其余小写">
+  <div class="fn-head">
+    <span class="fn-name">capitalize</span>
+    <span class="fn-sum">首字母大写，其余小写</span>
+    <span class="tag">大小写</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool capitalize -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hELLO</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">Hello</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hELLO</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">Hello</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="swapcase" data-fn="text_tool swapcase 大小写 大小写互换">
+  <div class="fn-head">
+    <span class="fn-name">swapcase</span>
+    <span class="fn-sum">大小写互换</span>
+    <span class="tag">大小写</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool swapcase -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">Hello</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hELLO</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">Hello</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hELLO</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%91%BD%E5%90%8D%E9%A3%8E%E6%A0%BC" class="anchor"><a href="#g-%E5%91%BD%E5%90%8D%E9%A3%8E%E6%A0%BC">命名风格（5）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="snake_case" data-fn="text_tool snake_case 命名风格 转为 snake_case">
+  <div class="fn-head">
+    <span class="fn-name">snake_case</span>
+    <span class="fn-sum">转为 snake_case</span>
+    <span class="tag">命名风格</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool snake_case -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">HelloWorld</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hello_world</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">HelloWorld</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hello_world</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="kebab_case" data-fn="text_tool kebab_case 命名风格 转为 kebab-case">
+  <div class="fn-head">
+    <span class="fn-name">kebab_case</span>
+    <span class="fn-sum">转为 kebab-case</span>
+    <span class="tag">命名风格</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool kebab_case -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">HelloWorld</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hello-world</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">HelloWorld</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hello-world</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="camel_case" data-fn="text_tool camel_case 命名风格 转为 camelCase">
+  <div class="fn-head">
+    <span class="fn-name">camel_case</span>
+    <span class="fn-sum">转为 camelCase</span>
+    <span class="tag">命名风格</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool camel_case -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">helloWorld</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">helloWorld</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="pascal_case" data-fn="text_tool pascal_case 命名风格 转为 PascalCase">
+  <div class="fn-head">
+    <span class="fn-name">pascal_case</span>
+    <span class="fn-sum">转为 PascalCase</span>
+    <span class="tag">命名风格</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool pascal_case -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">HelloWorld</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">HelloWorld</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="slugify" data-fn="text_tool slugify 命名风格 转为 URL slug">
+  <div class="fn-head">
+    <span class="fn-name">slugify</span>
+    <span class="fn-sum">转为 URL slug</span>
+    <span class="tag">命名风格</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool slugify -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">Hello, World!</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hello-world</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">Hello, World!</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hello-world</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%B8%85%E6%B4%97" class="anchor"><a href="#g-%E6%B8%85%E6%B4%97">清洗（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="trim" data-fn="text_tool trim 清洗 去除首尾空白">
+  <div class="fn-head">
+    <span class="fn-name">trim</span>
+    <span class="fn-sum">去除首尾空白</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool trim -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">  hi  </div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hi</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">  hi  </span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hi</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="trim_start" data-fn="text_tool trim_start 清洗 去除开头空白">
+  <div class="fn-head">
+    <span class="fn-name">trim_start</span>
+    <span class="fn-sum">去除开头空白</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool trim_start -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">  hi  </div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hi  </div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">  hi  </span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hi  </span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="trim_end" data-fn="text_tool trim_end 清洗 去除结尾空白">
+  <div class="fn-head">
+    <span class="fn-name">trim_end</span>
+    <span class="fn-sum">去除结尾空白</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool trim_end -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">  hi  </div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">  hi</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">  hi  </span></div>
+      <div class="row"><span class="k">out</span> <span class="v">  hi</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="strip_empty" data-fn="text_tool strip_empty 清洗 删除空行">
+  <div class="fn-head">
+    <span class="fn-name">strip_empty</span>
+    <span class="fn-sum">删除空行</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool strip_empty -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+
+b</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+
+b</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+b</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="dedent" data-fn="text_tool dedent 清洗 去除每行公共缩进">
+  <div class="fn-head">
+    <span class="fn-name">dedent</span>
+    <span class="fn-sum">去除每行公共缩进</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool dedent -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">    a
+    b</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">    a
+    b</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+b</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="indent" data-fn="text_tool indent 清洗 每行加前缀，--n 空格数或 --prefix 自定义">
+  <div class="fn-head">
+    <span class="fn-name">indent</span>
+    <span class="fn-sum">每行加前缀，--n 空格数或 --prefix 自定义</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool indent -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">  a
+  b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>2</code></td><td>空格数</td></tr><tr><td><code>--prefix</code></td><td><code>VAL</code></td><td></td><td>自定义前缀，优先于 --n</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">  a
+  b</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="squeeze_blank" data-fn="text_tool squeeze_blank 清洗 连续空行压缩为一行">
+  <div class="fn-head">
+    <span class="fn-name">squeeze_blank</span>
+    <span class="fn-sum">连续空行压缩为一行</span>
+    <span class="tag">清洗</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool squeeze_blank -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+
+
+b</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+
+b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+
+
+b</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+
+b</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E5%8F%98%E6%8D%A2" class="anchor"><a href="#g-%E5%8F%98%E6%8D%A2">变换（7）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="reverse" data-fn="text_tool reverse 变换 反转全文字符">
+  <div class="fn-head">
+    <span class="fn-name">reverse</span>
+    <span class="fn-sum">反转全文字符</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool reverse -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abc</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">cba</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abc</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">cba</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="reverse_lines" data-fn="text_tool reverse_lines 变换 反转行顺序">
+  <div class="fn-head">
+    <span class="fn-name">reverse_lines</span>
+    <span class="fn-sum">反转行顺序</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool reverse_lines -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b
+c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">c
+b
+a</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b
+c</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">c
+b
+a</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="repeat" data-fn="text_tool repeat 变换 重复 N 次，--n 次数，--sep 分隔符">
+  <div class="fn-head">
+    <span class="fn-name">repeat</span>
+    <span class="fn-sum">重复 N 次，--n 次数，--sep 分隔符</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool repeat -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">ab</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">abab</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>2</code></td><td>重复次数</td></tr><tr><td><code>--sep</code></td><td><code>VAL</code></td><td><code></code></td><td>每次之间的分隔符</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">ab</span><span class="k">  --n 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">abab</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="pad_start" data-fn="text_tool pad_start 变换 左侧补齐到 --n 长度">
+  <div class="fn-head">
+    <span class="fn-name">pad_start</span>
+    <span class="fn-sum">左侧补齐到 --n 长度</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool pad_start -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">7</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">         7</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>10</code></td><td>目标长度</td></tr><tr><td><code>--char</code></td><td><code>VAL</code></td><td><code> </code></td><td>填充字符</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">7</span><span class="k">  --n 10 --char  </span></div>
+      <div class="row"><span class="k">out</span> <span class="v">         7</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="pad_end" data-fn="text_tool pad_end 变换 右侧补齐到 --n 长度">
+  <div class="fn-head">
+    <span class="fn-name">pad_end</span>
+    <span class="fn-sum">右侧补齐到 --n 长度</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool pad_end -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">7</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">7         </div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>10</code></td><td>目标长度</td></tr><tr><td><code>--char</code></td><td><code>VAL</code></td><td><code> </code></td><td>填充字符</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">7</span><span class="k">  --n 10 --char  </span></div>
+      <div class="row"><span class="k">out</span> <span class="v">7         </span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="truncate" data-fn="text_tool truncate 变换 截断到 --n 字符并加后缀">
+  <div class="fn-head">
+    <span class="fn-name">truncate</span>
+    <span class="fn-sum">截断到 --n 字符并加后缀</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool truncate -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">abcdefghij</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">abcde...</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>20</code></td><td>最大长度</td></tr><tr><td><code>--suffix</code></td><td><code>VAL</code></td><td><code>...</code></td><td>截断后缀</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">abcdefghij</span><span class="k">  --n 5 --suffix ...</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">abcde...</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="wrap" data-fn="text_tool wrap 变换 按 --width 折行">
+  <div class="fn-head">
+    <span class="fn-name">wrap</span>
+    <span class="fn-sum">按 --width 折行</span>
+    <span class="tag">变换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool wrap -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">aaa bbb ccc</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">aaa bbb
+ccc</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-w, --width</code></td><td><code>VAL</code></td><td><code>80</code></td><td>行宽</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">aaa bbb ccc</span><span class="k">  --width 7</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">aaa bbb
+ccc</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E6%9F%A5%E6%89%BE%E6%9B%BF%E6%8D%A2" class="anchor"><a href="#g-%E6%9F%A5%E6%89%BE%E6%9B%BF%E6%8D%A2">查找替换（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="replace" data-fn="text_tool replace 查找替换 替换文本，--from/--to，--regex 启用正则">
+  <div class="fn-head">
+    <span class="fn-name">replace</span>
+    <span class="fn-sum">替换文本，--from/--to，--regex 启用正则</span>
+    <span class="tag">查找替换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool replace -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a-b-c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a b c</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--from</code></td><td><code>VAL</code></td><td></td><td>待替换内容（必填）</td></tr><tr><td><code>--to</code></td><td><code>VAL</code></td><td><code></code></td><td>替换为，默认空串</td></tr><tr><td><code>--regex</code></td><td></td><td></td><td>把 --from 当正则，--flags 修饰符</td></tr><tr><td><code>--flags</code></td><td><code>VAL</code></td><td><code>g</code></td><td>正则修饰符</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a-b-c</span><span class="k">  --from - --to  </span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a b c</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="contains" data-fn="text_tool contains 查找替换 是否包含 --needle，输出 true/false">
+  <div class="fn-head">
+    <span class="fn-name">contains</span>
+    <span class="fn-sum">是否包含 --needle，输出 true/false</span>
+    <span class="tag">查找替换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool contains -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--needle</code></td><td><code>VAL</code></td><td></td><td>要查找的子串（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span><span class="k">  --needle world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="starts_with" data-fn="text_tool starts_with 查找替换 是否以 --needle 开头">
+  <div class="fn-head">
+    <span class="fn-name">starts_with</span>
+    <span class="fn-sum">是否以 --needle 开头</span>
+    <span class="tag">查找替换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool starts_with -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--needle</code></td><td><code>VAL</code></td><td></td><td>前缀（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello</span><span class="k">  --needle he</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="ends_with" data-fn="text_tool ends_with 查找替换 是否以 --needle 结尾">
+  <div class="fn-head">
+    <span class="fn-name">ends_with</span>
+    <span class="fn-sum">是否以 --needle 结尾</span>
+    <span class="tag">查找替换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool ends_with -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">true</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--needle</code></td><td><code>VAL</code></td><td></td><td>后缀（必填）</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello</span><span class="k">  --needle lo</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">true</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="extract" data-fn="text_tool extract 查找替换 按 --regex 抽取，每行一个匹配（--group 取指定捕获组）">
+  <div class="fn-head">
+    <span class="fn-name">extract</span>
+    <span class="fn-sum">按 --regex 抽取，每行一个匹配（--group 取指定捕获组）</span>
+    <span class="tag">查找替换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool extract -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a1 b22 c333</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">1
+22
+333</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--regex</code></td><td><code>VAL</code></td><td></td><td>正则表达式（必填）</td></tr><tr><td><code>-g, --group</code></td><td><code>VAL</code></td><td><code>0</code></td><td>捕获组序号，0 表示整匹配</td></tr><tr><td><code>--flags</code></td><td><code>VAL</code></td><td><code>g</code></td><td>正则修饰符</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a1 b22 c333</span><span class="k">  --regex \d+</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">1
+22
+333</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="substring" data-fn="text_tool substring 查找替换 截取子串，位置参数 [start] [end]">
+  <div class="fn-head">
+    <span class="fn-name">substring</span>
+    <span class="fn-sum">截取子串，位置参数 [start] [end]</span>
+    <span class="tag">查找替换</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool substring -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">hello world</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">hello</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">hello world</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">hello</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E8%A1%8C%E6%93%8D%E4%BD%9C" class="anchor"><a href="#g-%E8%A1%8C%E6%93%8D%E4%BD%9C">行操作（6）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="sort_lines" data-fn="text_tool sort_lines 行操作 行排序，--desc 降序，--numeric 按数值">
+  <div class="fn-head">
+    <span class="fn-name">sort_lines</span>
+    <span class="fn-sum">行排序，--desc 降序，--numeric 按数值</span>
+    <span class="tag">行操作</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool sort_lines -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">10
+9
+b</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">9
+10
+b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--desc</code></td><td></td><td></td><td>降序</td></tr><tr><td><code>--numeric</code></td><td></td><td></td><td>按数值比较</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">10
+9
+b</span><span class="k">  --numeric true</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">9
+10
+b</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="uniq" data-fn="text_tool uniq 行操作 去重，--count 输出每行出现次数">
+  <div class="fn-head">
+    <span class="fn-name">uniq</span>
+    <span class="fn-sum">去重，--count 输出每行出现次数</span>
+    <span class="tag">行操作</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool uniq -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b
+a</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--count</code></td><td></td><td></td><td>输出 &quot;行 次数&quot;</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b
+a</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+b</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="join" data-fn="text_tool join 行操作 用 --sep 把多行连成一行">
+  <div class="fn-head">
+    <span class="fn-name">join</span>
+    <span class="fn-sum">用 --sep 把多行连成一行</span>
+    <span class="tag">行操作</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool join -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b
+c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a,b,c</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--sep</code></td><td><code>VAL</code></td><td><code> </code></td><td>连接符，默认空格</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b
+c</span><span class="k">  --sep ,</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a,b,c</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="split" data-fn="text_tool split 行操作 用 --sep 把文本切成多行">
+  <div class="fn-head">
+    <span class="fn-name">split</span>
+    <span class="fn-sum">用 --sep 把文本切成多行</span>
+    <span class="tag">行操作</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool split -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a,b,c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+b
+c</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>--sep</code></td><td><code>VAL</code></td><td><code> </code></td><td>分隔符，默认空白</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a,b,c</span><span class="k">  --sep ,</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+b
+c</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="head" data-fn="text_tool head 行操作 取前 --n 行">
+  <div class="fn-head">
+    <span class="fn-name">head</span>
+    <span class="fn-sum">取前 --n 行</span>
+    <span class="tag">行操作</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool head -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b
+c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">a
+b</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>10</code></td><td>行数</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b
+c</span><span class="k">  --n 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">a
+b</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="tail" data-fn="text_tool tail 行操作 取后 --n 行">
+  <div class="fn-head">
+    <span class="fn-name">tail</span>
+    <span class="fn-sum">取后 --n 行</span>
+    <span class="tag">行操作</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool tail -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">a
+b
+c</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">b
+c</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>选项</th><th>参数</th><th>默认</th><th>说明</th></tr></thead><tbody><tr><td><code>-n, --n</code></td><td><code>VAL</code></td><td><code>10</code></td><td>行数</td></tr></tbody></table></div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">a
+b
+c</span><span class="k">  --n 2</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">b
+c</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div data-group>
+<h2 id="g-%E7%9B%B8%E4%BC%BC%E5%BA%A6" class="anchor"><a href="#g-%E7%9B%B8%E4%BC%BC%E5%BA%A6">相似度（2）</a></h2>
+<div class="fn-grid">
+<div class="fn" id="levenshtein" data-fn="text_tool levenshtein 相似度 编辑距离（input 两行，每行一个字符串）">
+  <div class="fn-head">
+    <span class="fn-name">levenshtein</span>
+    <span class="fn-sum">编辑距离（input 两行，每行一个字符串）</span>
+    <span class="tag">相似度</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool levenshtein -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">kitten
+sitting</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">3</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">kitten
+sitting</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">3</span></div>
+    </div>
+  </div>
+</div>
+<div class="fn" id="similarity" data-fn="text_tool similarity 相似度 归一化相似度 0~1（input 两行，每行一个字符串）">
+  <div class="fn-head">
+    <span class="fn-name">similarity</span>
+    <span class="fn-sum">归一化相似度 0~1（input 两行，每行一个字符串）</span>
+    <span class="tag">相似度</span>
+  </div>
+  <div class="fn-body">
+    <pre class="code tight" data-lang="bash"><code>text_tool similarity -i input.desc -o output.desc</code></pre>
+    <div class="fn-io">
+      <div class="io">
+      <div class="lbl">input.desc</div>
+      <div class="val">kitten
+sitting</div>
+      <div class="hint">整段文本即 input.desc 全文</div>
+    </div>
+      <div class="io">
+      <div class="lbl">output.desc</div>
+      <div class="val">0.571428571429</div>
+      <div class="hint">处理后的文本</div>
+    </div>
+    </div>
+    <div class="fn-ex">
+      <div class="row"><span class="k">in </span><span class="v">kitten
+sitting</span></div>
+      <div class="row"><span class="k">out</span> <span class="v">0.571428571429</span></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="prevnext">
+<span>← <a href="statistics_tool.html">statistics_tool</a></span>
+<span><a href="json_tool.html">json_tool</a> →</span>
+</div>
+    <div class="footer">
+      ai-tools · DESC/1.0 · 零第三方依赖 · <a href="https://github.com/hupingin/ai-tools" target="_blank" rel="noopener">GitHub</a><br>
+      本页由 <code>npm run doc</code> 自动生成，请勿手改。
+    </div>
+  </main>
+</div>
+<script src="../assets/doc.js"></script>
+</body>
+</html>
