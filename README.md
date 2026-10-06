@@ -52,7 +52,7 @@ printf '1 2' > input.desc && basic_math_tool add && cat output.desc
 ## 安装
 
 ```bash
-git clone https://github.com/<your-name>/ai-tools.git
+git clone https://github.com/hupingin/ai-tools.git
 cd ai-tools
 npm link          # 或 npm install -g .
 ```
