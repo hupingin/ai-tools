@@ -1,0 +1,51 @@
+{
+  "name": "ai-tools",
+  "version": "0.1.0",
+  "description": "为 AI 设计的统一范式命令行工具集：xxx_tool <function> -i input.desc -o output.desc",
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "llm",
+    "agent",
+    "cli",
+    "tools",
+    "desc",
+    "zero-dependency"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "main": "registry.js",
+  "bin": {
+    "ai-tools": "bin/ai-tools.js",
+    "basic_math_tool": "bin/basic_math_tool.js",
+    "statistics_tool": "bin/statistics_tool.js",
+    "text_tool": "bin/text_tool.js",
+    "json_tool": "bin/json_tool.js",
+    "csv_tool": "bin/csv_tool.js",
+    "datetime_tool": "bin/datetime_tool.js",
+    "file_tool": "bin/file_tool.js",
+    "crypto_tool": "bin/crypto_tool.js",
+    "unit_tool": "bin/unit_tool.js",
+    "color_tool": "bin/color_tool.js",
+    "image_tool": "bin/image_tool.js",
+    "finance_tool": "bin/finance_tool.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "tools",
+    "registry.js",
+    "SPEC.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "selftest": "node scripts/selftest-all.js",
+    "index": "node scripts/gen-index.js",
+    "smoke": "node scripts/smoke.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

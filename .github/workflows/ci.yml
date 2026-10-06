@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: ['18', '20', '22']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 零依赖：这里不应该安装任何东西，只做一次断言
+      - name: 断言零第三方依赖
+        run: node -e "const p=require('./package.json');const n=Object.keys({...p.dependencies,...p.devDependencies}).length;if(n){console.error('存在第三方依赖: '+n);process.exit(1)}console.log('零依赖 OK')"
+
+      - name: 单元测试 (node --test)
+        run: npm test
+
+      - name: 内置示例自检 (selftest)
+        run: npm run selftest
+
+      - name: 端到端冒烟
+        run: npm run smoke
+
+      - name: 索引与契约是否最新
+        run: |
+          npm run index
+          git diff --exit-code -- INDEX.md MANIFEST.json
+
+  contract:
+    name: 契约与规范校验
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 全部工具可加载且 schema 可序列化
+        run: node -e "
+          const r = require('./registry');
+          const { fnSchema } = require('./lib/cli');
+          const tools = r.loadAll();
+          const META = new Set(['list','functions','help','schema','selftest','version']);
+          let n = 0;
+          for (const t of tools) {
+            if (!t.name.endsWith('_tool')) throw new Error('工具名必须以 _tool 结尾: ' + t.name);
+            const s = JSON.parse(fnSchema(t));
+            for (const f of t.functions) {
+              if (META.has(f.name)) throw new Error(t.name + '.' + f.name + ' 占用了元函数保留名');
+              if (!f.summary || !f.input || !f.output) throw new Error(t.name + '.' + f.name + ' 缺少契约字段');
+              n++;
+            }
+          }
+          console.log('契约校验通过: ' + tools.length + ' 个工具 / ' + n + ' 个函数');
+        "
